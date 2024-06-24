@@ -1,7 +1,44 @@
 body {
     display: grid;
-    place-items: center;
+    align-items: center;
     justify-content: center;
-    text-align: center;
+    background: url(./images/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: black;
+    background-size: 100%;
+    margin-top: 50px;
 }
 
+h1 {
+    text-align: center;
+    color: gold;
+}
+
+p {
+    text-align: center;
+    color: gold;
+    font-style: oblique;
+}
+
+img {
+    height: 220px;
+}
+
+.start-grid {
+    display: flex;
+}
+
+.btn-primary {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    display: block;
+    background-color: rgb(109, 22, 22);
+    border: none;
+    color: gold;
+}
+
+.btn-primary:hover {
+    background-color: gold;
+    color: rgb(109, 22, 22);
+}
