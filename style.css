@@ -28,7 +28,7 @@ img {
     display: flex;
 }
 
-.btn-primary {
+#main-butt {
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
     display: block;
@@ -37,9 +37,16 @@ img {
     color: gold;
 }
 
-.btn-primary:hover {
+#main-butt:hover {
     background-color: gold;
     color: rgb(109, 22, 22);
+}
+
+.register {
+    background: url(./images/register-background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
 }
 
 @media (max-width: 810px) {
@@ -53,5 +60,12 @@ img {
 
     .start-grid {
         display: block;
+    }
+
+    .register {
+        background: url(./images/register-background-mobile.jpg);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
     }
 }
