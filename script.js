@@ -21,7 +21,7 @@ function validateForm() {
     }
 
     if (!email.value.trim()) {
-        email.setCustomValidity('Email does not exist, enter proper email.');
+        email.setCustomValidity('Cannot be empty, enter your email.');
         isValid = false;
     } else {
         email.setCustomValidity('');
@@ -32,6 +32,33 @@ function validateForm() {
         isValid = false;
     } else {
         password.setCustomValidity('');
+    }
+
+    if (!isValid) {
+        form.reportValidity();
+    }
+
+    return isValid;
+}
+
+function logValidateForm() {
+    var form = document.getElementById('myLogForm');
+    var logEmail = document.getElementById('logEmail');
+    var logPassword = document.getElementById('logPassword');
+    var isValid = true;
+
+    if (!logEmail.value.trim()) {
+        logEmail.setCustomValidity('Cannot be empty, enter your email.');
+        isValid = false;
+    } else {
+        logEmail.setCustomValidity('');
+    }
+
+    if (!logPassword.value.trim()) {
+        logPassword.setCustomValidity('Cannot be empty, enter your password.');
+        isValid = false;
+    } else {
+        logPassword.setCustomValidity('');
     }
 
     if (!isValid) {
