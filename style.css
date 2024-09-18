@@ -65,6 +65,13 @@ img {
     background-size: 100%;
 }
 
+.menu {
+    background: green;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+
 @media (max-width: 810px) {
 
     body {
