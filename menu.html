@@ -62,7 +62,7 @@
         <div class="tab-pane fade" id="income" role="tabpanel" aria-labelledby="incomes-tab">
             <h1>Add income</h1>
             <div class="container mt-5">
-                <form>
+                <form id="incomeForm">
                     <div class="mb-3">
                         <label for="amountInput" class="form-label">Enter amount</label>
                         <div class="input-group">
@@ -74,22 +74,23 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="zloty">zł</a>
+                                            <a class="dropdown-item" href="#" data-currency="zł">zł</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="euro">€</a>
+                                            <a class="dropdown-item" href="#" data-currency="€">€</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="dollar">$</a>
+                                            <a class="dropdown-item" href="#" data-currency="$">$</a>
                                         </li>
                                     </ul>
                                 </div>                       
                             </span>
                         </div>
+                        <input type="hidden" id="selectedCurrency" name="selectedCurrency" value="" required>
                     </div>
                     <div class="mb-3">
                         <label for="dateInputIncome" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="dateInputIncome" required/>
+                        <input type="date" class="form-control" id="dateInputIncome" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputCategoryIncome" class="form-label">Category</label>
@@ -113,8 +114,8 @@
                                 </li>
                             </ul>
                         </div>
-                        <input type="text" class="form-control mt-2" id="customInputIncome"
-                            placeholder="Custom category" style="display: none"/>
+                        <input type="text" class="form-control mt-2" id="customInputIncome" placeholder="Custom category" style="display: none;">
+                        <input type="hidden" class="form-control mt-2" id="selectedCategoryIncome" name="selectedCategoryIncome" placeholder="Selected category" required>                        
                     </div>
                     <div class="mb-3">
                         <label for="inputMessageIncome" class="form-label">Comment</label>
@@ -132,7 +133,7 @@
         <div class="tab-pane fade" id="expense" role="tabpanel" aria-labelledby="expenses-tab">
             <h1>Add expense</h1>
             <div class="container mt-5">
-                <form>
+                <form id="expenseForm">
                     <div class="mb-3">
                         <label for="amountInput" class="form-label">Enter amount</label>
                         <div class="input-group">
@@ -145,22 +146,23 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="currencyDropdown">
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="zloty">zł</a>
+                                            <a class="dropdown-item" href="#" data-currency="zł">zł</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="euro">€</a>
+                                            <a class="dropdown-item" href="#" data-currency="€">€</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#" data-category="dollar">$</a>
+                                            <a class="dropdown-item" href="#" data-currency="$">$</a>
                                         </li>
                                     </ul>
                                 </div>                       
                             </span>
+                            <input type="hidden" id="selectedCurrency" name="selectedCurrency" value="" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="dateInputExpense" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="dateInputExpense" required />
+                        <input type="date" class="form-control" id="dateInputExpense" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputCategoryExpense" class="form-label">Category</label>
@@ -192,7 +194,8 @@
                             </ul>
                         </div>
                         <input type="text" class="form-control mt-2" id="customInputExpense"
-                            placeholder="Custom category" style="display: none"/>
+                            placeholder="Custom category" style="display: none;">
+                        <input type="hidden" class="form-control mt-2" id="selectedCategoryExpense" name="selectedCategoryExpense" placeholder="Selected category" required>
                     </div>
                     <div class="mb-3">
                         <label for="paymentMethodExpense" class="form-label">Payment method</label>
@@ -213,8 +216,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <input type="text" class="form-control mt-2" id="customInputMethodExpense"
-                            placeholder="Custom payment method" style="display: none"/>
+                        <input type="text" class="form-control mt-2" id="customPaymentMethodExpense"
+                        placeholder="Custom payment method" style="display: none;">
+                        <input type="hidden" class="form-control mt-2" id="selectedPayment" name="selectedPayment" placeholder="Selected payment" required>
                     </div>
                     <div class="mb-3">
                         <label for="inputMessageExpense" class="form-label">Comment</label>
