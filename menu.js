@@ -351,3 +351,52 @@ document.getElementById('submitPasswordButt').addEventListener('click', function
         alert('Please enter a password.');
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('myPieChart').getContext('2d');
+    const myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow'],
+            datasets: [{
+                label: 'Dataset',
+                data: [300, 50, 100],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Your pie chart',
+                    font: {
+                        size: '30vw',
+                        weight: 'bold'
+                    },
+                },
+                legend: {
+                    position: 'bottom',
+                    align: 'center',
+                    labels: {
+                        padding: 25,
+                        font: {
+                            size: '15vw',
+                        }
+                    }
+                },
+            }
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (myPieChart) {
+            myPieChart.resize();
+        }
+    });
+});

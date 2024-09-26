@@ -9,6 +9,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <link rel="stylesheet" href="./style.css" />
     <script src="menu.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="menu">
@@ -323,7 +324,7 @@
             </div>
             <span id="dateRange" class="range"></span>
             <div class="container"></div>
-                <div class="row">
+                <div class="row mb-4">
                   <div class="col-md-6">
                     <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
                       <thead>
@@ -379,7 +380,7 @@
                   </div>
                 </div>
 
-                <div class="row-md-6 summary" style="margin-bottom: 50px;">
+                <div class="row-md-6 summary mb-5">
                     <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
                       <thead>
                         <tr>
@@ -396,9 +397,14 @@
                       </tbody>
                     </table>
                   </div>
+
+                <div class="chart-container">
+                    <canvas id="myPieChart"></canvas>
+                </div>
+
               </div>
         </div>
-        
+            
         <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

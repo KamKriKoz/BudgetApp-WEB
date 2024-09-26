@@ -197,6 +197,14 @@ th {
     color: rgb(109, 22, 22);
 }
 
+.chart-container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+    background-color: #fff;   
+}
+
 @media (max-width: 997px) {
 
     body {
@@ -228,5 +236,13 @@ th {
 
     .tab-content {
         width: 400px;
+    }
+
+    .chart-container {
+        width: 100%;
+        margin: auto;
+        padding: 0px;
+        border-radius: 15px;
+        background-color: #fff;   
     }
 }
