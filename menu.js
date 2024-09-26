@@ -299,3 +299,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.getElementById('changeName').addEventListener('click', function() {
+    const nameInputContainer = document.getElementById('nameInputContainer');
+    nameInputContainer.classList.toggle('d-none');
+});
+
+document.getElementById('submitNameButt').addEventListener('click', function() {
+    const nameInput = document.getElementById('nameInput').value;
+    if (nameInput) {
+        alert(`Your new name is: ${nameInput}`);
+        document.getElementById('nameInput').value = '';
+        document.getElementById('nameInputContainer').classList.add('d-none')
+    } else {
+        alert('Please enter a name.');
+    }
+});
+
+document.getElementById('changeEmail').addEventListener('click', function() {
+    const emailInputContainer = document.getElementById('emailInputContainer');
+    emailInputContainer.classList.toggle('d-none');
+});
+
+document.getElementById('submitEmailButt').addEventListener('click', function() {
+    const emailInput = document.getElementById('emailInput').value;
+    if (emailInput) {
+        alert(`Your new email is: ${emailInput}`);
+        document.getElementById('emailInput').value = '';
+        document.getElementById('emailInputContainer').classList.add('d-none')
+    } else {
+        alert('Please enter a email.');
+    }
+});
+
+document.getElementById('changePassword').addEventListener('click', function() {
+    const passwordInputContainer = document.getElementById('passwordInputContainer');
+    passwordInputContainer.classList.toggle('d-none');
+});
+
+document.getElementById('submitPasswordButt').addEventListener('click', function() {
+    const passwordInput = document.getElementById('passwordInput').value;
+    if (passwordInput) {
+        alert(`Password has been changed`);
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('passwordInputContainer').classList.add('d-none')
+    } else {
+        alert('Please enter a password.');
+    }
+});
