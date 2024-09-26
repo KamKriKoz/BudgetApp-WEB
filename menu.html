@@ -277,7 +277,7 @@
                     <li><a class="dropdown-item" data-range="current-month" href="#">Current month</a></li>
                     <li><a class="dropdown-item" data-range="previous-month" href="#">Previous month</a></li>
                     <li><a class="dropdown-item" data-range="current-year" href="#">Current year</a></li>
-                    <li><a class="dropdown-item" data-range="custom" href="#">Set custom</a></li>
+                    <li><a class="dropdown-item" data-range="custom" href="#" data-bs-toggle="modal" data-bs-target="#dateModal">Set custom</a></li>
                 </ul>
             </div>
             <span id="dateRange" class="range"></span>
@@ -357,6 +357,27 @@
                   </div>
 
               </div>
+        </div>
+        
+        <div class="modal fade" id="dateModal" tabindex="-1" aria-labelledby="dateModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dateModalLabel">Select Date Range</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label class="mb-2" for="startDate">Start Date:</label>
+                        <input type="date" id="startDate" class="form-control mb-3"/>
+                        <label class="mb-2" for="endDate">End Date:</label>
+                        <input type="date" id="endDate" class="form-control mb-3"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="applyDateRange">Apply</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tab-pane fade" id="set" role="tabpanel" aria-labelledby="settings-tab">
