@@ -338,7 +338,7 @@
                   </div>
                 </div>
 
-                <div class="row-md-6 summary">
+                <div class="row-md-6 summary" style="margin-bottom: 50px;">
                     <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
                       <thead>
                         <tr>
@@ -355,7 +355,6 @@
                       </tbody>
                     </table>
                   </div>
-
               </div>
         </div>
         
@@ -381,8 +380,36 @@
         </div>
 
         <div class="tab-pane fade" id="set" role="tabpanel" aria-labelledby="settings-tab">
-            <h1>Settings</h1>
-            <p>Change your password</p>
+            <div class="container d-flex flex-column align-items-center">
+                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changeName"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Change your name
+                </button>
+                <div id="nameInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                    <input type="text" class="form-control mb-3 text-center" id="nameInput" placeholder="Enter your new name">
+                    <button class="btn btn-secondary mb-3 submitButt" id="submitNameButt">Submit</button>
+                </div>
+
+                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changeEmail"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Change your email
+                </button>
+                <div id="emailInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                    <input type="text" class="form-control mb-3 text-center" id="emailInput" placeholder="Enter your new email">
+                    <button class="btn btn-secondary mb-3 submitButt" id="submitEmailButt">Submit</button>
+                </div>
+
+                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changePassword"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Change your password
+                </button>
+                <div id="passwordInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                    <input type="text" class="form-control mb-3 text-center" id="oldPasswordInput" placeholder="Enter your old password">
+                    <input type="text" class="form-control mb-3 text-center" id="passwordInput" placeholder="Enter your new password">
+                    <input type="text" class="form-control mb-3 text-center" id="repeatedPasswordInput" placeholder="Repeat your new password">
+                    <button class="btn btn-secondary mb-3 submitButt" id="submitPasswordButt">Submit</button>
+                </div>            
+            </div>       
         </div>
     </div>
 
