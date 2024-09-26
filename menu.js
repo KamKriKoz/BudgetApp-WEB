@@ -229,3 +229,73 @@ document.addEventListener('DOMContentLoaded', function() {
         }        
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dateRangeSpan = document.getElementById('dateRange');
+    const balanceDropdown = document.getElementById('balanceDropdown');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const applyDateRangeButton = document.getElementById('applyDateRange');
+
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    const formatDate = (date) => {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+    };
+
+    dateRangeSpan.textContent = `${formatDate(startDate)} - ${formatDate(endDate)}`;
+    balanceDropdown.textContent = 'Current month';
+
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedRange = e.target.getAttribute('data-range');
+            let startDate, endDate;
+
+            const now = new Date();
+
+            switch (selectedRange) {
+                case 'current-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    break;
+                case 'previous-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                    break;
+                case 'current-year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    endDate = new Date(now.getFullYear() + 1, 0, 0);
+                    break;
+            }
+
+            if (startDate && endDate) {
+                dateRangeSpan.textContent = `${formatDate(startDate)} - ${formatDate(endDate)}`;
+                balanceDropdown.textContent = e.target.textContent;
+            }
+        });
+    });
+
+    applyDateRangeButton.addEventListener('click', function() {
+        const startDateValue = startDateInput.value;
+        const endDateValue = endDateInput.value;
+        if (startDateValue && endDateValue) {
+            const startDate = new Date(startDateValue);
+            const endDate = new Date(endDateValue);
+
+            const formattedStartDate = formatDate(startDate);
+            const formattedEndDate = formatDate(endDate);
+
+            dateRangeSpan.textContent = `${formattedStartDate} - ${formattedEndDate}`;
+            balanceDropdown.textContent = 'Custom range';
+            const modal = bootstrap.Modal.getInstance(document.getElementById('dateModal'));
+            modal.hide();
+        }
+    });
+});
