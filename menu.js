@@ -339,9 +339,13 @@ document.getElementById('changePassword').addEventListener('click', function() {
 
 document.getElementById('submitPasswordButt').addEventListener('click', function() {
     const passwordInput = document.getElementById('passwordInput').value;
-    if (passwordInput) {
+    const oldPasswordInput = document.getElementById('oldPasswordInput').value;
+    const repeatedPasswordInput = document.getElementById('repeatedPasswordInput').value;
+    if (passwordInput && oldPasswordInput && repeatedPasswordInput) {
         alert(`Password has been changed`);
+        document.getElementById('oldPasswordInput').value = '';
         document.getElementById('passwordInput').value = '';
+        document.getElementById('repeatedPasswordInput').value = '';
         document.getElementById('passwordInputContainer').classList.add('d-none')
     } else {
         alert('Please enter a password.');
