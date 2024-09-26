@@ -229,3 +229,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }        
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dateRangeSpan = document.getElementById('dateRange');
+    const balanceDropdown = document.getElementById('balanceDropdown');
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const startDateFormatted = startDate.toLocaleDateString();
+    const endDateFormatted = endDate.toLocaleDateString();
+
+    dateRangeSpan.innerHTML = `${startDateFormatted} - ${endDateFormatted}`;
+    balanceDropdown.innerText = 'Current month';
+
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const selectedRange = e.target.getAttribute('data-range');
+            let startDate, endDate;
+
+            const now = new Date();
+
+            switch (selectedRange) {
+                case 'current-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    break;
+                case 'previous-month':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                    break;
+                case 'current-year':
+                    startDate = new Date(now.getFullYear(), 0, 1);
+                    endDate = new Date(now.getFullYear() + 1, 0, 0);
+                    break;
+                case 'custom':
+                    // Handle custom date range logic if needed
+                    break;
+            }
+
+            const startDateFormatted = startDate.toLocaleDateString();
+            const endDateFormatted = endDate.toLocaleDateString();
+            dateRangeSpan.innerText = `${startDateFormatted} - ${endDateFormatted}`;
+            balanceDropdown.innerText = e.target.innerText;
+        });
+    });
+});
