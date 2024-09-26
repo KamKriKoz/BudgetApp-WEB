@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const category = e.target.getAttribute('data-category');
             
-            if (category === 'Custom') {
+            if (category === 'Other') {
                 customInput.style.display = 'block';
                 selectedCategoryInput.value = '';
-                categoryDropdown.innerHTML = `Custom`;
+                categoryDropdown.innerHTML = `Other`;
             } else {
                 customInput.style.display = 'none';
                 selectedCategoryInput.value = category;
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         customInput.style.display = 'block';
         selectedCategoryInput.value = '';
-        categoryDropdown.innerHTML = `Custom`;
+        categoryDropdown.innerHTML = `Other`;
     });
 
     const form = document.getElementById('incomeForm');
@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const category = e.target.getAttribute('data-category');
             
-            if (category === 'Custom') {
+            if (category === 'Other') {
                 customEInput.style.display = 'block';
                 selectedCategoryEInput.value = '';
-                categoryExpenseDropdown.innerHTML = 'Custom';
+                categoryExpenseDropdown.innerHTML = 'Other';
             } else {
                 customEInput.style.display = 'none';
                 selectedCategoryEInput.value = category;
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         customEInput.style.display = 'block';
         selectedCategoryEInput.value = '';
-        categoryExpenseDropdown.innerHTML = 'Custom';
+        categoryExpenseDropdown.innerHTML = 'Other';
     });
 
     const form = document.getElementById('expenseForm');
