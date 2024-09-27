@@ -36,6 +36,8 @@ function validateForm() {
 
     if (!isValid) {
         form.reportValidity();
+    } else {
+        alert('Account has been created.');
     }
 
     return isValid;
