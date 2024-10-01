@@ -98,7 +98,7 @@
         <div class="tab-pane fade show active" id="start" role="tabpanel" aria-labelledby="start-tab">
             <h1>Hi ...</h1>
             <p>What do you want to do next?</p>
-            <img src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
+            <img id="menu-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
         </div>
         
         <div class="tab-pane fade" id="income" role="tabpanel" aria-labelledby="incomes-tab">
@@ -428,35 +428,35 @@
 
         <div class="tab-pane fade" id="set" role="tabpanel" aria-labelledby="settings-tab">
             <div class="container d-flex flex-column align-items-center">
-                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changeName"
+                <button class="btn btn-secondary dropdown-toggle mb-3 butt-wd" type="button" id="changeName"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Change your name
                 </button>
-                <div id="nameInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                <div id="nameInputContainer" class="d-none d-flex flex-column align-items-center butt-wd">
                     <input type="text" class="form-control mb-3 text-center" id="nameInput" placeholder="Enter your new name">
                     <button class="btn btn-secondary mb-3 submitButt" id="submitNameButt">Submit</button>
                 </div>
 
-                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changeEmail"
+                <button class="btn btn-secondary dropdown-toggle mb-3 butt-wd" type="button" id="changeEmail"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Change your email
                 </button>
-                <div id="emailInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                <div id="emailInputContainer" class="d-none d-flex flex-column align-items-center butt-wd">
                     <input type="text" class="form-control mb-3 text-center" id="emailInput" placeholder="Enter your new email">
                     <button class="btn btn-secondary mb-3 submitButt" id="submitEmailButt">Submit</button>
                 </div>
 
-                <button class="btn btn-secondary dropdown-toggle mb-3 w-50" type="button" id="changePassword"
+                <button class="btn btn-secondary dropdown-toggle mb-3 butt-wd" type="button" id="changePassword"
                         data-bs-toggle="dropdown" aria-expanded="false">
                         Change your password
                 </button>
-                <div id="passwordInputContainer" class="d-none w-50 d-flex flex-column align-items-center">
+                <div id="passwordInputContainer" class="d-none d-flex flex-column align-items-center butt-wd">
                     <input type="password" class="form-control mb-3 text-center" id="oldPasswordInput" placeholder="Enter your old password">
                     <input type="password" class="form-control mb-3 text-center" id="passwordInput" placeholder="Enter new password">
                     <input type="password" class="form-control mb-3 text-center" id="repeatedPasswordInput" placeholder="Repeat new password">
                     <button class="btn btn-secondary mb-3 submitButt" id="submitPasswordButt">Submit</button>
                 </div>            
-            </div>       
+            </div>
         </div>
     </div>
 
