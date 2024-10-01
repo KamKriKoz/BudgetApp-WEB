@@ -28,41 +28,37 @@ img {
     display: flex;
 }
 
-#main-butt {
+.btn-primary {
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
     display: block;
     background-color: rgb(109, 22, 22);
     border: none;
     color: gold;
 }
 
-#main-butt:hover {
+.btn-primary:hover {
     background-color: gold;
     color: rgb(109, 22, 22);
 }
 
-#second-butt {
-    background-color: rgb(21, 172, 21);
+#main_sub {
+    height: 50px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    display: block;
+    background-color: rgb(109, 22, 22);
     border: none;
+    color: gold;
 }
 
-#second-butt:hover {
-    background-color: rgb(6, 136, 6);
-}
-
-.register {
-    background: url(./images/register-background.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
-}
-
-.login {
-    background: url(./images/login-background.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
+#main_sub:hover {
+    background-color: gold;
+    color: rgb(109, 22, 22);    
 }
 
 .nav-tabs .nav-link {
@@ -215,18 +211,6 @@ th {
 
     .start-grid {
         display: block;
-    }
-
-    .register {
-        background: url(./images/register-background-mobile.jpg);
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-
-    .login {
-        background: url(./images/login-background-mobile.jpg);
-        background-repeat: no-repeat;
-        background-size: cover;
     }
 
     .nav-tabs {
