@@ -93,6 +93,7 @@ img {
 
 .dropdown-item {
     color: gold;
+    background-color: rgb(109, 22, 22);
 }
 
 .dropdown-item:hover {
@@ -218,16 +219,6 @@ th {
     width: 80%;
 }
 
-#set {
-    display: inline-block;
-    margin-left: 12px;
-    width: 97%;
-}
-
-#customCategoryInput {
-    display: none;
-}
-
 #successMessage {
     display: none;
     font-size: 20px;
@@ -267,11 +258,5 @@ th {
     #menu-img {
         width: 80%;
         height: fit-content;
-    }
-
-    #set {
-        display: inline-block;
-        margin-left: 12px;
-        width: 94%;
     }
 }
