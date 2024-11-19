@@ -23,7 +23,7 @@
                 <ul class="nav nav-tabs">
                     
                     <li class="nav-item">
-                        <a class="nav-link active">
+                        <a class="nav-link" id="start-tab" href="./menu.html">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
@@ -46,7 +46,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.html">
+                        <a class="nav-link active" id="expenses-tab">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
@@ -91,16 +91,91 @@
         </div>
     </nav>
     
-    <div class="tab-content container mt-5">
+    <div class="tab-content container mt-5 mb-5">
         <div class="tab-pane active">
-            <h1>Hi ...</h1>
-            <p>What do you want to do next?</p>
-            <img id="menu-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
+
+            <h1>Add expense</h1>
+            <div class="container mt-5">
+                <form id="expenseForm">
+                    <div class="mb-3">
+                        <label for="amountInput" class="form-label">Enter amount [zł]</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dateInputExpense" class="form-label">Select Date</label>
+                        <input type="date" class="form-control" id="dateInputExpense" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Select category</label>
+                        <select id="categorySelect" class="form-select" aria-label="Select category" required>
+                            <option value="" selected disabled>Select category</option>
+                            <option value="Food">Food</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Telecommunication">Telecommunication</option>
+                            <option value="Health">Health</option>
+                            <option value="Clothes">Clothes</option>
+                            <option value="Hygiene">Hygiene</option>
+                            <option value="Kids">Kids</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Trip">Trip</option>
+                            <option value="Training">Training</option>
+                            <option value="Books">Books</option>
+                            <option value="Savings">Savings</option>
+                            <option value="For retirement">For retirement</option>
+                            <option value="Debts">Debts</option>
+                            <option value="Donation">Donation</option>
+                            <option value="custom">Other - category in comment</option>
+                        </select>                       
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="paymentMethodExpense" class="form-label">Payment method</label>
+                        <select id="paymentMethodDropdown" class="form-select" aria-label="Payment method" required>
+                            <option value="" selected disabled>Payment method</option>
+                            <option value="Food">Cash</option>
+                            <option value="Rent">Card</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputMessageExpense" class="form-label">Comment</label>
+                        <textarea class="form-control" id="inputMessageExpense" rows="1"
+                        placeholder="Enter your message"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-center" style="margin-top: 50px">
+                        <button type="submit" class="btn btn-primary add">Add</button>
+                        <a href="./menu.html" class="btn btn-secondary cancel">Cancel</a>
+                    </div>
+                </form>
+
+                <div id="successMessage">
+                    <p>Your expense has been successfully added! Select the tab you want to go.</p>
+                    <a href="./add-income-tab.html" class="btn btn-primary add">Add another expense</a>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
+    <script>
+        document.getElementById('expenseForm').addEventListener('submit', function(event) {
+
+            event.preventDefault();
+            document.querySelector('#expenseForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        });
+    </script>
+
 </body>
 </html>
