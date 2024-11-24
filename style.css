@@ -308,6 +308,16 @@ h2 {
     margin-top: 20px;
 }
 
+.alternative {
+    background-color: rgba(109, 22, 22, 0.575);
+    color: rgba(255, 217, 0, 0.608);
+    border: none;
+}
+
+.alternative:hover {
+    background-color: gold;
+    color: rgb(109, 22, 22);
+}
 
 @media (max-width: 997px) {
 
