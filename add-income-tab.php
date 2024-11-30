@@ -1,3 +1,15 @@
+<?php
+
+	session_start();
+	
+	if(!isset($_SESSION['logged_in'])) {
+		
+		header('Location:login.php');
+		exit();
+	}
+	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +19,7 @@
     <title>Main menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./style.css"/>
 </head>
 
 <body class="menu">
@@ -15,15 +27,15 @@
         <div class="container-fluid">
             
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTabs"
-              aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarTabs">
                 <ul class="nav nav-tabs">
                     
                     <li class="nav-item">
-                        <a class="nav-link" id="start-tab" href="./menu.html">
+                        <a class="nav-link" id="start-tab" href="./menu.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
@@ -33,7 +45,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.html">
+                        <a class="nav-link active" id="incomes-tab">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -46,7 +58,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.html">
+                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
@@ -56,17 +68,17 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.html">
+                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
-                            </svg>             
+                            </svg>                    
                             
                         View balance</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active" id="settings-tab">
+                        <a class="nav-link" id="settings-tab" href="./settings-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
@@ -77,7 +89,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="log-out-tab" href="./login.html">
+                        <a class="nav-link" id="log-out-tab" href="./logout.php">
                         
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -91,48 +103,53 @@
         </div>
     </nav>
     
-    <div class="tab-content container mt-5">
+    <div class="tab-content container mt-5 mb-5">
         <div class="tab-pane active">
 
-          <form class="inputForm" id="newName">
-            <label for="newName" class="form-label">Change your name</label>
-            <div class="inputChange mb-3">
-              <input type="text" id="text-input-name" class="form-control mb-3 text-left" placeholder="Enter your new name" required/>
-              <button type="submit" id="confirm-button-name" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
+            <h1>Add income</h1>
+            <div class="container mt-3">
+                <form id="incomeForm">
+                    <div class="mb-3">
+                        <label for="amountInput" class="form-label">Enter amount [zł]</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dateInputIncome" class="form-label">Select Date</label>
+                        <input type="date" class="form-control" id="dateInputIncome" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Select category</label>
+                        <select id="categorySelect" class="form-select" aria-label="Select category" required>
+                            <option value="" selected disabled>Select category</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Bank profits">Bank profits</option>
+                            <option value="Allegro sale">Allegro sale</option>
+                            <option value="custom">Other - category in comment</option>
+                        </select>                       
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputMessageIncome" class="form-label">Comment</label>
+                        <textarea class="form-control" id="inputMessageIncome" rows="1"
+                        placeholder="Enter your message"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-center" style="margin-top: 50px">
+                        <button type="submit" class="btn btn-primary add">Add</button>
+                        <a href="./menu.php" class="btn btn-secondary cancel">Cancel</a>
+                    </div>
+                </form>
+
+                <div id="successMessage">
+                    <p>Your income has been successfully added! Select the tab you want to go.</p>
+                    <a href="./add-income-tab.php" class="btn btn-primary add">Add another income</a>
+                </div>
+
             </div>
-          </form>
-
-          <div id="successMessageName">
-            <p>Your name has been successfully changed.</p>
-          </div>
-
-          <form class="inputForm" id="newEmail">
-            <label for="newEmail" class="form-label">Change your email</label>
-            <div class="inputChange mb-3">
-              <input type="email" id="text-input-email" class="form-control mb-3 text-left" placeholder="Enter your new email" required/>
-              <button type="submit" id="confirm-button-email" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
-            </div>
-          </form>
-
-          <div id="successMessageEmail">
-            <p>Your email has been successfully changed.</p>
-          </div>
-          
-          <form class="inputForm" id="newPassword">
-            <label for="newPassword" class="form-label">Change your password</label>
-            <div class="inputChange mb-3">
-              <div class="inputPassword">
-                <input type="password" id="text-input-password-old" class="form-control mb-3 text-left" placeholder="Enter your old password" required/>
-                <input type="password" id="text-input-password-new" class="form-control mb-3 text-left" placeholder="Enter your new password" required/>
-                <input type="password" id="text-input-password-repeat" class="form-control mb-3 text-left" placeholder="Repeat new password" required/>
-              </div>
-              <button type="submit" id="confirm-button-password" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
-            </div>
-          </form>
-
-          <div id="successMessagePassword">
-            <p>Your password has been successfully changed.</p>
-          </div>
 
         </div>
     </div>
@@ -141,28 +158,14 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-        <script>
-          document.getElementById('newName').addEventListener('submit', function(event) {
-  
-              event.preventDefault();
-              document.querySelector('#newName').style.display = 'none';
-              document.getElementById('successMessageName').style.display = 'block';
-          });
+    <script>
+        document.getElementById('incomeForm').addEventListener('submit', function(event) {
 
-          document.getElementById('newEmail').addEventListener('submit', function(event) {
-
-              event.preventDefault();
-              document.querySelector('#newEmail').style.display = 'none';
-              document.getElementById('successMessageEmail').style.display = 'block';
-          });
-
-          document.getElementById('newPassword').addEventListener('submit', function(event) {
-
-              event.preventDefault();
-              document.querySelector('#newPassword').style.display = 'none';
-              document.getElementById('successMessagePassword').style.display = 'block';
-          });
-        </script>
+            event.preventDefault();
+            document.querySelector('#incomeForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        });
+    </script>
 
 </body>
 </html>

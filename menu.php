@@ -1,3 +1,15 @@
+<?php
+
+	session_start();
+	
+	if(!isset($_SESSION['logged_in'])) {
+		
+		header('Location:login.php');
+		exit();
+	}
+	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,7 +45,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.html">
+                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -46,7 +58,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.html">
+                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
@@ -56,7 +68,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.html">
+                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
@@ -66,7 +78,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="settings-tab" href="./settings-tab.html">
+                        <a class="nav-link" id="settings-tab" href="./settings-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
@@ -77,7 +89,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="log-out-tab" href="./login.html">
+                        <a class="nav-link" id="log-out-tab" href="./logout.php">						
                         
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -93,7 +105,15 @@
     
     <div class="tab-content container mt-5">
         <div class="tab-pane active">
-            <h1>Hi ...</h1>
+            
+			
+			<h1>Hi 
+			<?php
+			
+				echo $_SESSION['user'];
+				
+			?></h1>
+			
             <p>What do you want to do next?</p>
             <img id="menu-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
         </div>

@@ -1,3 +1,15 @@
+<?php
+
+	session_start();
+	
+	if(!isset($_SESSION['logged_in'])) {
+		
+		header('Location:login.php');
+		exit();
+	}
+	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,7 +35,7 @@
                 <ul class="nav nav-tabs">
                     
                     <li class="nav-item">
-                        <a class="nav-link" id="start-tab" href="./menu.html">
+                        <a class="nav-link" id="start-tab" href="./menu.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
@@ -33,7 +45,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.html">
+                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -56,7 +68,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.html">
+                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
@@ -66,7 +78,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="settings-tab" href="./settings-tab.html">
+                        <a class="nav-link" id="settings-tab" href="./settings-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
@@ -77,7 +89,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="log-out-tab" href="./login.html">
+                        <a class="nav-link" id="log-out-tab" href="./logout.php">
                         
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -150,13 +162,13 @@
 
                     <div class="d-flex justify-content-center" style="margin-top: 50px">
                         <button type="submit" class="btn btn-primary add">Add</button>
-                        <a href="./menu.html" class="btn btn-secondary cancel">Cancel</a>
+                        <a href="./menu.php" class="btn btn-secondary cancel">Cancel</a>
                     </div>
                 </form>
 
                 <div id="successMessage">
                     <p>Your expense has been successfully added! Select the tab you want to go.</p>
-                    <a href="./add-income-tab.html" class="btn btn-primary add">Add another expense</a>
+                    <a href="./add-income-tab.php" class="btn btn-primary add">Add another expense</a>
                 </div>
 
             </div>

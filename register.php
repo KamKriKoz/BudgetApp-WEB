@@ -1,3 +1,11 @@
+<?php
+
+	session_start();
+	
+	unset($_SESSION['error']);
+	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,20 +17,13 @@
 </head>
 
 <body class="register">
-    <form method ="post" id="myForm" style="display: grid; justify-content: center; margin-top: 0rem" action="index.html">
-        <h1 class="h3 fw-normal" style="text-align: center; color: gold; font-size: 2rem">REGISTRATION</h1>
-        <div class="input-group has-validation mb-3" style="width: 300px">
-            <span class="input-group-text">📋</span>
+    <form method ="post" id="myForm" style="display: grid; justify-content: center; margin-top: 0rem">
+        <h1 class="h3 mb-3 fw-normal" style="text-align: center; color: gold; font-size: 2rem">REGISTRATION</h1>
+		<div class="input-group has-validation mb-3" style="width: 300px">
+            <span class="input-group-text">🧑‍💻</span>
             <div class="form-floating">
-                <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
-                <label for="firstName">First Name</label>
-            </div>
-        </div>
-        <div class="input-group has-validation mb-3" style="width: 300px">
-            <span class="input-group-text">💳</span>
-            <div class="form-floating">
-                <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
-                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" placeholder="Username" name="regUserName" required>
+                <label>Username</label>
             </div>
         </div>
         <div class="input-group has-validation mb-3" style="width: 300px">
@@ -48,13 +49,17 @@
             </div>
         </div>
         <div class="input-group has-validation mb-3" style="width: 300px">
-            <span class="input-group-text"><input style="justify-content: center; width: 1.3rem; height: 0.9rem;" type="checkbox" name="rules"></span>
-            <label class="form-control"><a href="" style="text-decoration: none; color: black;">Accept rules</a></label>
+            <span class="input-group-text">
+				<input style="justify-content: center; width: 1.3rem; height: 0.9rem;" type="checkbox" name="rules_checkbox" required>
+			</span>
+            <label class="form-control">
+				<a href="./rules.html" style="text-decoration: none; color: rgb(109, 22, 22);">Accept rules</a>
+			</label>
         </div>
         
         <button id="main_sub" class="btn btn-primary w-100 py-2" type="submit">Create account</button>
     </form>  
-    <a href="./login.html" class="btn btn-secondary mt-3 alternative">Log in</a>
+    <a href="./login.php" class="btn btn-secondary mt-3 alternative">Log in</a>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
