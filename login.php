@@ -4,10 +4,9 @@
 	
 	if((isset($_SESSION['logged_in']))&&($_SESSION['logged_in']==true)) {
 	
-		header('Location:menu.php');
+		header('Location: menu.php');
 		exit();
 	}
-
 ?>
 
 <!DOCTYPE html>
@@ -41,9 +40,7 @@
     </form>
 	
 	<?php
-		
 		if(isset($_SESSION['error'])) echo $_SESSION['error'];
-		
 	?>
 	
     <a href="./register.php" class="btn btn-secondary mt-3 alternative">Register</a>
