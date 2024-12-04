@@ -191,7 +191,7 @@
 
             <h1>Add income</h1>
             <div class="container mt-3">
-                <form method ="post" id="incomeForm">	
+                <form method="post" id="incomeForm">	
 				
                     <div class="mb-3">
                         <label class="form-label">Enter amount [zł]</label>

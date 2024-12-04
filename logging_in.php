@@ -40,20 +40,42 @@
 						$_SESSION['user']=$row['username'];
 						$_SESSION['id']=$row['id'];
 						
+						$user_id=mysqli_real_escape_string($connection, $_SESSION['id']);
 						
-						$user_id=mysqli_real_escape_string($connection, $_SESSION['id']);	
-						$query1="SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = '$user_id'";
-											
+						
+						$query1="SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = '$user_id'";				
 						$user_incomes_categories=[];
-						
 						$result1=$connection->query($query1);
 						
-						while($row=$result1->fetch_assoc()) {
-							$user_incomes_categories[]=$row;
+						while($row1=$result1->fetch_assoc()) {
+							$user_incomes_categories[]=$row1;
 						}
 						
 						$_SESSION['user_incomes_categories']=$user_incomes_categories;
 						
+						
+						$query2="SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = '$user_id'";				
+						$user_expenses_categories=[];
+						$result2=$connection->query($query2);
+						
+						while($row2=$result2->fetch_assoc()) {
+							$user_expenses_categories[]=$row2;
+						}
+						
+						$_SESSION['user_expenses_categories']=$user_expenses_categories;
+						
+						
+						$query3="SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = '$user_id'";				
+						$user_payment_methods=[];
+						$result3=$connection->query($query3);
+						
+						while($row3=$result3->fetch_assoc()) {
+							$user_payment_methods[]=$row3;
+						}
+						
+						$_SESSION['user_payment_methods']=$user_payment_methods;
+						
+
 						unset($_SESSION['error']);
 						$result->free();
 						header('Location: menu.php');
