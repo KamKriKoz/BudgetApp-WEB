@@ -4,25 +4,108 @@
 	
 	if(!isset($_SESSION['logged_in'])) {
 		
-		header('Location:login.php');
+		header('Location: login.php');
 		exit();
 	}
 	
+	$userId=$_SESSION['id'];
+		
+	if(isset($_POST['incomeValue'])) {
+	
+		$all_good=true;
+		$incomeValue=$_POST['incomeValue'];
+		
+		if(($incomeValue)<=0) {
+			$all_good=false;
+			$_SESSION['e_value']='<div class="mt-2" style="color:red; font-size: 0.88rem">The value must be greater than 0.</div>';
+		}
+		
+		$_SESSION['r_iValue']=$incomeValue;
+		
+		if(isset($_POST['incomeCategory'])) {
+			
+			$incomeCategoryString=$_POST['incomeCategory'];
+			$incomeCategoryArray=explode(", ", $incomeCategoryString);
+
+			$incomeCategory=$incomeCategoryArray[0];
+
+			$_SESSION['r_iCategory']=$incomeCategory;
+			$_SESSION['r_iCategoryName']=$incomeCategoryArray[1];
+			
+		} else {
+			$all_good=false;
+			$_SESSION['e_category']='<div class="mt-2" style="color:red; font-size: 0.88rem">A category must be set.</div>';
+		}
+		
+		if(!empty($_POST['incomeDate'])) {
+			$incomeDate=$_POST['incomeDate'];
+			$currentTime=new DateTime();
+			
+			if (new DateTime($incomeDate)>$currentTime) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be later than today.</div>';
+			}
+			
+			if (new DateTime($incomeDate)<new DateTime('2000-01-01')) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be earlier than 01.01.2000.</div>';
+			}
+			
+			$_SESSION['r_iDate']=$incomeDate;
+
+		} else {
+			$all_good=false;
+			$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">A date must be set.</div>';
+		}
+		
+		$incomeComment="";
+
+		if(!empty($_POST['incomeComment'])) {
+			$incomeComment=$_POST['incomeComment'];
+			$_SESSION['r_iComment']=$incomeComment;
+		}
+		
+		
+		if ($all_good==true) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result=$connection->query("INSERT INTO incomes VALUES (NULL, '$userId', '$incomeCategory', '$incomeValue', '$incomeDate', '$incomeComment')");
+					if(!$result) throw new Exception($connection->error);
+					
+					$_SESSION['addSuccess']=true;
+					header('Location: add-success.php');
+					
+					$connection->close();
+				}
+				
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure.<br/>Please try another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}	
+	}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Main menu</title>
+    <title>Add income tab</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <link rel="stylesheet" href="./style.css"/>
 </head>
 
-<body class="menu">
+<body class="add-income">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             
@@ -108,34 +191,77 @@
 
             <h1>Add income</h1>
             <div class="container mt-3">
-                <form id="incomeForm">
+                <form method ="post" id="incomeForm">	
+				
                     <div class="mb-3">
-                        <label for="amountInput" class="form-label">Enter amount [zł]</label>
+                        <label class="form-label">Enter amount [zł]</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01" required>
+                            <input type="number" class="form-control" placeholder="Amount" step="0.01" value="<?php 
+								if(isset($_SESSION['r_iValue'])) {
+									echo $_SESSION['r_iValue'];
+									unset($_SESSION['r_iValue']);
+								}
+							?>" name="incomeValue">
                         </div>
+							<?php
+								if (isset($_SESSION['e_value'])){
+									echo $_SESSION['e_value'];
+									unset($_SESSION['e_value']);
+								}
+							?>
                     </div>
 
                     <div class="mb-3">
-                        <label for="dateInputIncome" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="dateInputIncome" required>
+                        <label class="form-label">Select Date</label>
+                        <input type="date" class="form-control" value="<?php 
+							if(isset($_SESSION['r_iDate'])) {
+								echo $_SESSION['r_iDate'];
+								unset($_SESSION['r_iDate']);
+							}
+						?>" name="incomeDate">
+						<?php
+							if (isset($_SESSION['e_date'])){
+								echo $_SESSION['e_date'];
+								unset($_SESSION['e_date']);
+							}
+						?>
                     </div>
 
                     <div class="mb-3">
-                        <label for="categorySelect" class="form-label">Select category</label>
-                        <select id="categorySelect" class="form-select" aria-label="Select category" required>
-                            <option value="" selected disabled>Select category</option>
-                            <option value="Salary">Salary</option>
-                            <option value="Bank profits">Bank profits</option>
-                            <option value="Allegro sale">Allegro sale</option>
-                            <option value="custom">Other - category in comment</option>
-                        </select>                       
+                        <label class="form-label">Select category</label>
+                        <select class="form-select" name="incomeCategory">
+							<?php
+								if(isset($incomeCategoryArray)) {
+									echo '<option value="'.$_SESSION['r_iCategory'].', '.$_SESSION['r_iCategoryName'].'">'.$_SESSION['r_iCategoryName'].'</option>';
+									unset($incomeCategoryArray);
+									foreach ($_SESSION['user_incomes_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								} else {
+									echo '<option value="" selected disabled>Select category</option>';
+									foreach ($_SESSION['user_incomes_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								}
+							?>
+                        </select>
+						<?php
+							if (isset($_SESSION['e_category'])){
+								echo $_SESSION['e_category'];
+								unset($_SESSION['e_category']);
+							}
+						?>				
                     </div>
 
                     <div class="mb-3">
-                        <label for="inputMessageIncome" class="form-label">Comment</label>
-                        <textarea class="form-control" id="inputMessageIncome" rows="1"
-                        placeholder="Enter your message"></textarea>
+                        <label class="form-label">Comment</label>
+                        <input type="text" class="form-control"
+                        placeholder="Enter your message or another category" value="<?php 
+							if(isset($_SESSION['r_iComment'])) {
+								echo $_SESSION['r_iComment'];
+								unset($_SESSION['r_iComment']);
+							}
+						?>" name="incomeComment">
                     </div>
 
                     <div class="d-flex justify-content-center" style="margin-top: 50px">
@@ -143,29 +269,13 @@
                         <a href="./menu.php" class="btn btn-secondary cancel">Cancel</a>
                     </div>
                 </form>
-
-                <div id="successMessage">
-                    <p>Your income has been successfully added! Select the tab you want to go.</p>
-                    <a href="./add-income-tab.php" class="btn btn-primary add">Add another income</a>
-                </div>
-
             </div>
-
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-    <script>
-        document.getElementById('incomeForm').addEventListener('submit', function(event) {
-
-            event.preventDefault();
-            document.querySelector('#incomeForm').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
-        });
-    </script>
-
+		
 </body>
 </html>

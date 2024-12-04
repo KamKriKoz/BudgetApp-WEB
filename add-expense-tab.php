@@ -112,42 +112,25 @@
                     <div class="mb-3">
                         <label for="amountInput" class="form-label">Enter amount [zł]</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01" required>
+                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01">
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label for="dateInputExpense" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="dateInputExpense" required>
+                        <input type="date" class="form-control" id="dateInputExpense">
                     </div>
 
                     <div class="mb-3">
                         <label for="categorySelect" class="form-label">Select category</label>
-                        <select id="categorySelect" class="form-select" aria-label="Select category" required>
-                            <option value="" selected disabled>Select category</option>
-                            <option value="Food">Food</option>
-                            <option value="Rent">Rent</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Telecommunication">Telecommunication</option>
-                            <option value="Health">Health</option>
-                            <option value="Clothes">Clothes</option>
-                            <option value="Hygiene">Hygiene</option>
-                            <option value="Kids">Kids</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Trip">Trip</option>
-                            <option value="Training">Training</option>
-                            <option value="Books">Books</option>
-                            <option value="Savings">Savings</option>
-                            <option value="For retirement">For retirement</option>
-                            <option value="Debts">Debts</option>
-                            <option value="Donation">Donation</option>
-                            <option value="custom">Other - category in comment</option>
+                        <select id="categorySelect" class="form-select" aria-label="Select category">
+
                         </select>                       
                     </div>
 
                     <div class="mb-3">
                         <label for="paymentMethodExpense" class="form-label">Payment method</label>
-                        <select id="paymentMethodDropdown" class="form-select" aria-label="Payment method" required>
+                        <select id="paymentMethodDropdown" class="form-select" aria-label="Payment method">
                             <option value="" selected disabled>Payment method</option>
                             <option value="Food">Cash</option>
                             <option value="Rent">Card</option>
@@ -179,15 +162,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-    <script>
-        document.getElementById('expenseForm').addEventListener('submit', function(event) {
-
-            event.preventDefault();
-            document.querySelector('#expenseForm').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
-        });
-    </script>
 
 </body>
 </html>

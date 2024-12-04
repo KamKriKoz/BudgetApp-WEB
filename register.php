@@ -25,7 +25,7 @@
 		
 		if (ctype_alnum($regUsername)==false) {
 			$all_good=false;
-			$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Username can only contain letters and numbers.</span>';
+			$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Only Latin alphabet letters and numbers are allowed.</span>';
 		}
 		
 		if ((filter_var($regEmail_S, FILTER_VALIDATE_EMAIL)==false) || ($regEmail_S!=$regEmail)){
@@ -52,14 +52,12 @@
 			$all_good=false;
 			$_SESSION['e_bot']='<span class="mb-3" style="color: red; font-size: 0.78rem; margin-top: -0.5rem">Please confirm you are not a bot.</span>';
 		}
-		
+	
 		
 		$_SESSION['r_username']=$regUsername;
 		$_SESSION['r_email']=$regEmail;
-		$_SESSION['r_pass']=$regPass;
-		$_SESSION['r_passR']=$regPassR;
 		if(isset($_POST['rules'])) $_SESSION['r_rules']=true;
-		
+	
 		
 		require_once "connect.php";
 		mysqli_report(MYSQLI_REPORT_STRICT);
@@ -84,31 +82,42 @@
 					$all_good=false;
 					$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">This username is already taken. Enter another one.</span>';
 				}
-				
+								
 				if ($all_good==true) {
 					$connection->autocommit(false);
-					
 					
 					$query1="INSERT INTO users VALUES (NULL, '$regUsername', '$regPassHash', '$regEmail')";
 					if(!$connection->query($query1)) {
 						throw new Exception($connection->error);
 					}
 					
+					$newUserId=$connection->insert_id;
+					
 					$query2="INSERT INTO incomes_category_assigned_to_users (`user_id`, `name`)
-							SELECT LAST_INSERT_ID(), `name` FROM incomes_category_default";
+							SELECT '$newUserId', `name` FROM incomes_category_default";
 					if(!$connection->query($query2)) {
+						throw new Exception($connection->error);
+					}
+					
+					$query3="INSERT INTO expenses_category_assigned_to_users (`user_id`, `name`)
+							SELECT '$newUserId', `name` FROM expenses_category_default";
+					if(!$connection->query($query3)) {
+						throw new Exception($connection->error);
+					}
+					
+					$query4="INSERT INTO payment_methods_assigned_to_users (`user_id`, `name`)
+							SELECT '$newUserId', `name` FROM payment_methods_default";
+					if(!$connection->query($query4)) {
 						throw new Exception($connection->error);
 					}
 					
 					$connection->commit();
 					$_SESSION['registrationSuccess']=true;
 					header('Location: welcome.php');
-				} else {
-					throw new Exception($connection->error);
 				}
-				
 				$connection->close();
 			}
+			
 		} catch(Exception $e) {
 			echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure. <br/> Please register another time.</span>';
 			//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
@@ -170,12 +179,7 @@
         <div class="input-group has-validation mb-3" style="width: 300px">
             <span class="input-group-text">🔏</span>
             <div class="form-floating">
-                <input type="password" class="form-control" placeholder="Password" value="<?php 
-				if(isset($_SESSION['r_pass'])) {
-					echo $_SESSION['r_pass'];
-					unset($_SESSION['r_pass']);
-				}
-				?>" name="regPass">
+                <input type="password" class="form-control" placeholder="Password" name="regPass">
                 <label>Password</label>
             </div>
 			<?php
@@ -189,12 +193,7 @@
         <div class="input-group has-validation mb-3" style="width: 300px">
             <span class="input-group-text">🔏</span>
             <div class="form-floating">
-                <input type="password" class="form-control" placeholder="Repeat password" value="<?php 
-				if(isset($_SESSION['r_passR'])) {
-					echo $_SESSION['r_passR'];
-					unset($_SESSION['r_passR']);
-				}
-				?>" name="regPassR">
+                <input type="password" class="form-control" placeholder="Repeat password" name="regPassR">
                 <label>Repeat password</label>
             </div>
         </div>
@@ -215,7 +214,7 @@
 				?>>
 			</span>
             <div class="form-control">
-				<a href="./rules.html" style="text-decoration: none; color: rgb(109, 22, 22);">Accept rules</a>
+				<a href="./rules.php" target="_blank" style="text-decoration: none; color: rgb(109, 22, 22)">Accept rules</a>
 			</div>
         </div>
 		<?php

@@ -106,16 +106,13 @@
     <div class="tab-content container mt-5">
         <div class="tab-pane active">
             
-			
 			<h1>Hi 
 			<?php
-			
 				echo $_SESSION['user'];
-				
 			?></h1>
-			
+						
             <p>What do you want to do next?</p>
-            <img id="menu-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
+            <img id="m-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
         </div>
     </div>
 

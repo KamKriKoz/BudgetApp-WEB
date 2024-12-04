@@ -290,24 +290,6 @@ h2 {
     width: 100%;
 }
 
-#successMessageName {
-    display: none;
-    font-size: 20px;
-    margin-top: 20px;
-}
-
-#successMessageEmail {
-    display: none;
-    font-size: 20px;
-    margin-top: 20px;
-}
-
-#successMessagePassword {
-    display: none;
-    font-size: 20px;
-    margin-top: 20px;
-}
-
 .alternative {
     background-color: rgba(109, 22, 22, 0.575);
     color: rgba(255, 217, 0, 0.608);
@@ -348,7 +330,7 @@ h2 {
         background-color: #fff;   
     }
 
-    #menu-img {
+    #m-img {
         width: 80%;
         height: fit-content;
     }

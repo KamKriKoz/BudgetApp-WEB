@@ -11,8 +11,6 @@
 	
 	if(isset($_SESSION['r_username'])) unset($_SESSION['r_username']);
 	if(isset($_SESSION['r_email'])) unset($_SESSION['r_email']);
-	if(isset($_SESSION['r_pass'])) unset($_SESSION['r_pass']);
-	if(isset($_SESSION['r_passR'])) unset($_SESSION['r_passR']);
 	if(isset($_SESSION['r_rules'])) unset($_SESSION['r_rules']);
 	
 	if(isset($_SESSION['e_username'])) unset($_SESSION['e_username']);

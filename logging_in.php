@@ -40,6 +40,20 @@
 						$_SESSION['user']=$row['username'];
 						$_SESSION['id']=$row['id'];
 						
+						
+						$user_id=mysqli_real_escape_string($connection, $_SESSION['id']);	
+						$query1="SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = '$user_id'";
+											
+						$user_incomes_categories=[];
+						
+						$result1=$connection->query($query1);
+						
+						while($row=$result1->fetch_assoc()) {
+							$user_incomes_categories[]=$row;
+						}
+						
+						$_SESSION['user_incomes_categories']=$user_incomes_categories;
+						
 						unset($_SESSION['error']);
 						$result->free();
 						header('Location: menu.php');

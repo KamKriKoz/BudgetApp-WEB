@@ -25,14 +25,14 @@
         <div class="input-group has-validation mb-3" style="width: 300px">
             <span class="input-group-text">🧑‍💻</span>
             <div class="form-floating">
-                <input type="text" class="form-control" placeholder="Username" name="logUserName" required>
+                <input type="text" class="form-control" placeholder="Username" name="logUserName">
                 <label>Username</label>
             </div>
         </div>
         <div class="input-group has-validation mb-3" style="width: 300px">
             <span class="input-group-text">🔐</span>
             <div class="form-floating">
-                <input type="password" class="form-control" id="logPassword" placeholder="Password" name="logPassword" required>
+                <input type="password" class="form-control" id="logPassword" placeholder="Password" name="logPassword">
                 <label for="logPassword">Password</label>
             </div>
         </div>
