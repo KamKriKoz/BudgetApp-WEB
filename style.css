@@ -125,38 +125,10 @@ img {
     color: rgb(109, 22, 22);
 }
 
-td {
-    height: 30px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 14px;
-    line-height: 14px;
-    padding: 0;
-}
 
-th {
-    height: 50px;
-    font-size: 20px;
-    text-decoration: underline;
-    text-underline-offset: 5px;
-    text-align: center;
-    vertical-align: middle;
-}
 
 .summary {
     padding: 0;
-}
-
-#dateRange {
-    display: inline-block;
-    padding: 0.4rem 0.375rem;
-    border: 1px solid;
-    border-color: gray;
-    border-radius: 0.375rem;
-    background-color: rgb(109, 22, 22);
-    color: gold;
-    padding-left: 15px;
-    padding-right: 15px;
 }
 
 #title {
@@ -174,16 +146,6 @@ th {
     text-align: center;
 }
 
-.range {
-    font-weight: bold;
-    font-size: 18px;
-    width: 60%;
-    position: relative;
-    left: 20%;
-    text-align: center;
-    margin-bottom: 35px;
-    margin-top: 18px;
-}
 
 .submitButt {
     background-color: rgb(109, 22, 22);
@@ -217,49 +179,59 @@ h2 {
     align-items: center;
 }
 
-.pie-chart {
-    display: flex;
-    margin-top: 15px;
-    flex-direction: column;
-    align-items: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .pie {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: conic-gradient(
-      #ff6384 0% calc(var(--percentage1) * 1%),
-      #36a2eb calc(var(--percentage1) * 1%) calc((var(--percentage1) + var(--percentage2)) * 1%),
-      #ffce56 calc((var(--percentage1) + var(--percentage2)) * 1%) 100%
-    );
-    margin-bottom: 20px;
-  }
-  
-  .legend {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .legend li {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-  }
-  
-  .color {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    margin-right: 10px;
-  }
-  
-  .color1 { background-color: #ff6384; }
-  .color2 { background-color: #36a2eb; }
-  .color3 { background-color: #ffce56; }
+.chart-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			max-width: 300px;
+		}
 
+		.pie {
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			background: conic-gradient(
+				var(--color1, red) 0% var(--percentage1, 0%),
+				var(--color2, blue) var(--percentage1, 0%) var(--percentage2, 0%),
+				var(--color3, green) var(--percentage2, 0%) var(--percentage3, 0%),
+				var(--color4, yellow) var(--percentage3, 0%) var(--percentage4, 0%),
+				var(--color5, purple) var(--percentage4, 0%) var(--percentage5, 0%),
+				var(--color6, orange) var(--percentage5, 0%) var(--percentage6, 0%),
+				var(--color7, pink) var(--percentage6, 0%) var(--percentage7, 0%),
+				var(--color8, brown) var(--percentage7, 0%) var(--percentage8, 0%),
+				var(--color9, cyan) var(--percentage8, 0%) var(--percentage9, 0%),
+				var(--color10, lime) var(--percentage9, 0%) var(--percentage10, 0%),
+				var(--color11, teal) var(--percentage10, 0%) var(--percentage11, 0%),
+				var(--color12, magenta) var(--percentage11, 0%) 100%
+			);
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
 
+		.legend {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.legend li {
+			display: flex;
+			align-items: center;
+			margin: 5px 0;
+			font-size: 0.8rem;
+		}
+
+		.color-box {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			margin-right: 10px;
+			border: 1px solid #000;
+		}
+
+  
 .tab-pane {
     display: block;
     margin-top: -56px;
@@ -294,6 +266,7 @@ h2 {
     background-color: gold;
     color: rgb(109, 22, 22);
 }
+
 
 @media (max-width: 997px) {
 

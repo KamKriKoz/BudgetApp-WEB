@@ -74,10 +74,12 @@
 						}
 						
 						$_SESSION['user_payment_methods']=$user_payment_methods;
-						
 
 						unset($_SESSION['error']);
 						$result->free();
+						$result1->free();
+						$result2->free();
+						$result3->free();
 						header('Location: menu.php');
 					} else {
 						$_SESSION['error']='<span style="color:red; margin-top:1rem; text-align:center;">Incorrect login or password.</span>';

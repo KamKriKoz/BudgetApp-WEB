@@ -8,6 +8,8 @@
 		exit();
 	}
 	
+	
+	
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +21,10 @@
     <title>Main menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css"/>
+	<style>
+		
+	</style>
 </head>
 
 <body class="menu">
@@ -110,180 +115,393 @@
             <div class="container mt-4">
 
                 <div class="mb-3">
-                    <label for="date-range-select" class="form-label">Select date range</label>
-                    <select id="date-range-select" class="form-select" aria-label="Select category" required>
-                        <option value="" selected disabled>Date range</option>
-                        <option value="current-month">Current month</option>
-                        <option value="previous-month">Previous month</option>
-                        <option value="current-year">Current year</option>
-                        <option value="custom-date">Set custom</option>
-                    </select>                       
+					<form method="post" style="display: flex; justify-content: center; flex-wrap: wrap">
+						<label style="color: gold; font-size:1.2rem; margin-right: 12px">Select date range:</label>
+						
+						<input type="date" style="width: 6.5rem; border-radius: 0.5rem; padding-left: 4px" name="startDate">
+        
+						<input type="date" style="width: 6.5rem; border-radius: 0.5rem; padding-left: 4px" name="endDate">
+						
+						<button style="width: 58%; border-radius:1rem" type="submit" class="btn btn-primary add mt-3">Confirm / Reset</button>
+					</form>
                 </div>
+                
+				<div>
+					<p style="font-weight: bold; font-style: normal; font-size: 1.2rem">
+					Time period:
+						<?php
+							$currentDate=new DateTime();
+							$userId=$_SESSION['id'];
+						
+							if((!empty($_POST['startDate'])) && (!empty($_POST['endDate']))) {
+								$startDate=$_POST['startDate'];
+								$endDate=$_POST['endDate'];
+								echo $startDate." - ".$endDate;
+							} else {
+								$startDate='2000-01-01';
+								$endDate = $currentDate->format('Y-m-d');
+								echo "for all dates";	
+							}
+						?>
+					</p>
+				</div>
+				
+				
+				<?php
+					require_once "connect.php";
+					mysqli_report(MYSQLI_REPORT_STRICT);
+					
+					try {
+						$connection=new mysqli($host, $db_user, $db_password, $db_name);
+						if($connection->connect_errno!=0){
+							throw new Exception(mysqli_connect_errno());
+						} else {
+							
+							$query1="SELECT income.name AS income_category_name, inc.amount, inc.date_of_income, inc.income_comment
+									FROM incomes inc
+									JOIN incomes_category_assigned_to_users income ON inc.income_category_assigned_to_user_id = income.id
+									WHERE inc.user_id = '$userId' AND inc.date_of_income BETWEEN '$startDate' AND '$endDate'
+									ORDER BY inc.date_of_income DESC
+									";				
+							$user_incomes=[];
+							$result1=$connection->query($query1);
+							
+							while($row1=$result1->fetch_assoc()) {
+								$user_incomes[]=$row1;
+							}
+							
+							$query2="SELECT expense.name AS expense_category_name,
+											payment.name AS payment_method,
+											ex.amount, ex.date_of_expense, ex.expense_comment
+									FROM expenses ex
+									JOIN expenses_category_assigned_to_users expense ON ex.expense_category_assigned_to_user_id = expense.id
+									JOIN payment_methods_assigned_to_users payment ON ex.payment_method_assigned_to_user_id = payment.id
+									WHERE ex.user_id = '$userId' AND ex.date_of_expense BETWEEN '$startDate' AND '$endDate'
+									ORDER BY ex.date_of_expense DESC
+									";				
+							$user_expenses=[];
+							$result2=$connection->query($query2);
+							
+							while($row2=$result2->fetch_assoc()) {
+								$user_expenses[]=$row2;
+							}
+							
+							$query3="
+								SELECT incomes_category_assigned_to_users.name AS category,
+								SUM(incomes.amount) AS amount
+								FROM incomes_category_assigned_to_users
+								INNER JOIN incomes ON incomes.income_category_assigned_to_user_id = incomes_category_assigned_to_users.id
+								WHERE incomes.user_id = $userId AND incomes.date_of_income BETWEEN '$startDate' AND '$endDate'
+								GROUP BY incomes.income_category_assigned_to_user_id
+								ORDER BY amount DESC
+							";				
+							$user_incomes_by_category=[];
+							$result3=$connection->query($query3);
+							
+							while($row3=$result3->fetch_assoc()) {
+								$user_incomes_by_category[]=$row3;
+							}
+							
+							$query4="
+								SELECT expenses_category_assigned_to_users.name AS category,
+								SUM(expenses.amount) AS amount
+								FROM expenses_category_assigned_to_users
+								INNER JOIN expenses ON expenses.expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id
+								WHERE expenses.user_id = $userId AND expenses.date_of_expense BETWEEN '$startDate' AND '$endDate'
+								GROUP BY expenses.expense_category_assigned_to_user_id
+								ORDER BY amount DESC
+							";				
+							$user_expenses_by_category=[];
+							$result4=$connection->query($query4);
+							
+							while($row4=$result4->fetch_assoc()) {
+								$user_expenses_by_category[]=$row4;
+							}
+						
+							$query5="SELECT SUM(amount) AS incomesSum FROM incomes WHERE user_id='$userId'";
+							$result5=$connection->query($query5);
+							$row5=$result5->fetch_assoc();
+							$incomesSum=$row5['incomesSum'];
 
-                <div id="custom-date-picker" class="mt-3" style="display: none;">
-                    <label for="start-date" class="form-label">Start Date</label>
-                    <input type="date" id="start-date" class="form-control">
-                    
-                    <label for="end-date" class="form-label mt-3">End Date</label>
-                    <input type="date" id="end-date" class="form-control">
+							$query6="SELECT SUM(amount) AS expensesSum FROM expenses WHERE user_id='$userId'";
+							$result6=$connection->query($query6);
+							$row6=$result6->fetch_assoc();
+							$expensesSum=$row6['expensesSum'];
 
-                    <div class="button-container">
-                        <button id="apply-dates" class="btn btn-primary mt-3">Apply</button>
-                    </div>                        
-                </div>
-            
-                <span id="dateRange" class="range">/date/</span>
+							$balance=$incomesSum-$expensesSum;
+							
+							$query7="SELECT SUM(amount) AS periodIncomesSum FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN '$startDate' AND '$endDate'";
+							$result7=$connection->query($query7);
+							$row7=$result7->fetch_assoc();
+							$periodIncomesSum=$row7['periodIncomesSum'];
 
-                <div class="container">
-                    <div class="row mb-4">
-                    <div class="col-md-6">
-                        <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
-                        <thead>
-                            <tr>
-                            <th>Incomes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
-                        <thead>
-                            <tr>
-                            <th>Expenses</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
-                    </div>
+							$query8="SELECT SUM(amount) AS periodExpensesSum FROM expenses WHERE user_id='$userId' AND date_of_expense BETWEEN '$startDate' AND '$endDate'";
+							$result8=$connection->query($query8);
+							$row8=$result8->fetch_assoc();
+							$periodExpensesSum=$row8['periodExpensesSum'];
 
-                    <div class="row-md-6 summary mb-5">
-                        <table class="table table-bordered" style="border-radius: 15px; overflow: hidden;">
-                        <thead>
-                            <tr>
-                            <th>Account balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            <td style="font-weight: 700; font-size: 18px;">350,09 zł</td>
-                            </tr>
-                            <tr>
-                                <td>Text to overwrite!</td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div>
+							if(!$result1) throw new Exception($connection->error);
+							if(!$result2) throw new Exception($connection->error);
+							if(!$result3) throw new Exception($connection->error);
+							if(!$result4) throw new Exception($connection->error);
+							if(!$result5) throw new Exception($connection->error);
+							if(!$result6) throw new Exception($connection->error);
+							if(!$result7) throw new Exception($connection->error);
+							if(!$result8) throw new Exception($connection->error);
+							
+							$result1->free();
+							$result2->free();
+							$result3->free();
+							$result4->free();
+							$result5->free();
+							$result6->free();
+							$result7->free();
+							$result8->free();
 
-                    <div class="chart-container">
-                        <h2>Pie chart</h2>
-                        <div class="pie-chart">
-                            <div class="pie" style="--percentage1: 25; --percentage2: 50; --percentage3: 25;"></div>
-                            <ul class="legend">
-                                <li><span class="color color1"></span>Category 1 (25%)</li>
-                                <li><span class="color color2"></span>Category 2 (50%)</li>
-                                <li><span class="color color3"></span>Category 3 (25%)</li>
-                            </ul>
-                        </div>
-                    </div>
+							$connection->close();
+						}
+						
+					} catch(Exception $e) {
+						echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure.<br/>Please try another time.</span>';
+						//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+					}
+				?>
 
-                </div>   
+				<div class="row mb-4">
+					<div class="col">
+						<table class="table table-bordered" style="border-radius: 15px; overflow: hidden; width: 95%">	
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="4">Incomes</th>
+								</tr>
+								<tr>
+									<th style="text-decoration: none; font-size: 0.7rem">Category</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Amount</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Date</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+									foreach ($user_incomes as $row) {
+										echo "<tr>";
+											echo "<td style='font-size: 0.7rem'>".$row['income_category_name']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['amount']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['date_of_income']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['income_comment']."</td>";
+										echo "</tr>";
+									}										
+								?>
+							</tbody>
+							<tr>
+								<th style="font-size: 0.8rem; display: flex; justify-content: center" colspan="1">Sum</th>
+								<th colspan="3"><?php echo "<h2 class='mb-0 pt-1' style='font-size: 0.8rem'>".$periodIncomesSum." zł"."</h2>"; ?></th>
+							</tr>
+						</table>
+					</div>
+				
+					<div class="col">
+						<table class="table table-bordered" style="border-radius: 15px; overflow: hidden; width: 110%; margin-left: -10%">
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="5">Expenses</th>
+								</tr>
+								<tr>
+									<th style="text-decoration: none; font-size: 0.7rem">Category</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Payment</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Amount</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Date</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Comment</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+									foreach ($user_expenses as $row) {
+										echo "<tr>";
+											echo "<td style='font-size: 0.7rem'>".$row['expense_category_name']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['payment_method']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['amount']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['date_of_expense']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['expense_comment']."</td>";
+										echo "</tr>";
+									}										
+								?>
+							</tbody>
+							<tr>
+								<th style="font-size: 0.8rem; display: flex; justify-content: center" colspan="1">Sum</th>
+								<th colspan="4"><?php echo "<h2 class='mb-0 pt-1' style='font-size: 0.8rem'>".$periodExpensesSum." zł"."</h2>"; ?></th>
+							</tr>
+						</table>
+					</div>
+				</div>
+					
+				
+				<div class="row mb-4" style="display: flex; justify-content: center; border-radius: 15px; overflow: hidden; width: 100%; background-color: white; margin-left: 2px">
+					
+					<!---<div class="col">
+						<table class="table" style="border-radius: 15px; overflow: hidden; width: 100%">	
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="2">Incomes by category</th>
+								</tr>
+								<tr>
+									<th style="text-decoration: none; font-size: 0.7rem">Category</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+									foreach ($user_incomes_by_category as $row) {
+										echo "<tr>";
+											echo "<td style='font-size: 0.7rem'>".$row['category']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['amount']."</td>";
+										echo "</tr>";
+									}										
+								?>
+							</tbody>
+							<tr>
+								<th style="font-size: 0.7rem">Sum</th>
+								<th style="font-size: 0.7rem"><?php echo $periodIncomesSum; ?></th>
+							</tr>
+						</table>
+					</div>--->
+					
+					<div class="col" style="display: flex; justify-content: center; align-items: center">
+						<table style="overflow: hidden; width: 100%; margin: 20px; text-align: center">
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="2">Incomes by category</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="2">
+										<div class="chart-container">
+											<div class="pie" style="
+												<?php
+													$cumulativePercentage = 0;
+													$colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'pink', 'brown', 'cyan', 'lime', 'teal', 'magenta'];
+													$styles = '';
+													foreach ($user_incomes_by_category as $index=>$income) {
+														$percentage=($income['amount']/$periodIncomesSum)*100;
+														$cumulativePercentage += $percentage;
+														
+														$styles .= "--color".($index+1).": ".$colors[$index%count($colors)].";";
+														$styles .= "--percentage".($index+1).": $cumulativePercentage%;";
+													}
+													echo $styles;
+												?>
+											"></div>
+											<ul class="legend">
+												<?php
+													foreach ($user_incomes_by_category as $index=>$income) {
+														$percentage=number_format(($income['amount']/$periodIncomesSum)*100, 2);										
+														 echo "<li><span class='color-box' style='background-color: ".$colors[$index % count($colors)].";'></span>".$income['category']." $percentage%</li>";
+													}
+												?>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+						
+					<div class="col" style="display: flex; justify-content: center; align-items: center">
+						<table style="overflow: hidden; width: 100%; margin: 20px; text-align: center">
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="2">Expenses by category</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="2">
+										<div class="chart-container">
+											<div class="pie" style="
+												<?php
+													$cumulativePercentage = 0;
+													$colors = ['magenta', 'teal', 'lime', 'cyan', 'brown', 'pink', 'orange', 'purple', 'yellow', 'green', 'blue', 'red'];
+													$styles = '';
+													foreach ($user_expenses_by_category as $index=>$expense) {
+														$percentage=($expense['amount']/$periodExpensesSum)*100;
+														$cumulativePercentage += $percentage;
 
-            </div>
+														$styles .= "--color".($index+1).": ".$colors[$index%count($colors)].";";
+														$styles .= "--percentage".($index+1).": $cumulativePercentage%;";
+													}
+													echo $styles;
+												?>
+											"></div>
+											<ul class="legend">
+												<?php
+													foreach ($user_expenses_by_category as $index=>$expense) {
+														$percentage=number_format(($expense['amount']/$periodExpensesSum)*100, 2);										
+														 echo "<li><span class='color-box' style='background-color: ".$colors[$index%count($colors)].";'></span>".$expense['category']." $percentage%</li>";
+													}
+												?>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>	
+				
+					<!---<div class="col">
+						<table class="table" style="border-radius: 15px; overflow: hidden; width: 100%">
+							<thead>
+								<tr>
+									<th style="font-size: 1.1rem" colspan="2">Expenses by category</th>
+								</tr>
+								<tr>
+									<th style="text-decoration: none; font-size: 0.7rem">Category</th>
+									<th style="text-decoration: none; font-size: 0.7rem">Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+									foreach ($user_expenses_by_category as $row) {
+										echo "<tr>";
+											echo "<td style='font-size: 0.7rem'>".$row['category']."</td>";
+											echo "<td style='font-size: 0.7rem'>".$row['amount']."</td>";
+										echo "</tr>";
+									}										
+								?>
+							</tbody>
+							<tr>
+								<th style="font-size: 0.7rem">Sum</th>
+								<th style="font-size: 0.7rem"><?php echo $periodExpensesSum; ?></th>
+							</tr>
+						</table>
+					</div>--->
+					
+				</div>
+				
+				<div class="mt-5" style="display: flex; justify-content: center">
+					<table class="table table-bordered" style="width: 100%; border-radius: 15px; overflow: hidden;">
+					<thead>
+						<tr>
+							<th style="display: flex; justify-content: center; font-size: 1.1rem">General account balance</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="display: flex; justify-content: center; font-weight: 700; font-size: 1.1rem"><?php
+										echo number_format($balance, 2, ',', '')." zł";						
+									?></td>
+						</tr>
+					</tbody>
+					</table>
+				</div>
+				
+            </div>  
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-    <script>
-        document.getElementById('date-range-select').addEventListener('change', function () {
-            const dateRange = document.getElementById('dateRange');
-            const selectedValue = this.value;
-            const currentDate = new Date();
-            const customDatePicker = document.getElementById('custom-date-picker');
-
-            let rangeText = '/date/';
-
-            customDatePicker.style.display = 'none';
-
-            switch (selectedValue) {
-                case 'current-month':
-                    const currentMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-                    const currentMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-                    rangeText = `${formatDate(currentMonthStart)} - ${formatDate(currentMonthEnd)}`;
-                    break;
-                case 'previous-month':
-                    const previousMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-                    const previousMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-                    rangeText = `${formatDate(previousMonthStart)} - ${formatDate(previousMonthEnd)}`;
-                    break;
-                case 'current-year':
-                    const currentYearStart = new Date(currentDate.getFullYear(), 0, 1);
-                    const currentYearEnd = new Date(currentDate.getFullYear(), 11, 31);
-                    rangeText = `${formatDate(currentYearStart)} - ${formatDate(currentYearEnd)}`;
-                    break;
-                case 'custom-date':
-                    customDatePicker.style.display = 'block';
-                    rangeText = 'Select custom date range';
-                    break;
-                default:
-                    rangeText = '/date/';
-            }
-
-            dateRange.textContent = rangeText;
-        });
-
-        document.getElementById('apply-dates').addEventListener('click', function () {
-            const startDateValue = document.getElementById('start-date').value;
-            const endDateValue = document.getElementById('end-date').value;
-            const dateRange = document.getElementById('dateRange');
-
-            if (startDateValue && endDateValue) {
-                const startDate = new Date(startDateValue);
-                const endDate = new Date(endDateValue);
-                dateRange.textContent = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-            } else {
-                alert('Please select start and end dates.');
-            }
-        });
-
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${day}.${month}.${year}`;
-        }
-    </script>    
 
 </body>
 </html>
