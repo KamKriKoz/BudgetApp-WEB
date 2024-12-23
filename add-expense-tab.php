@@ -1,3 +1,113 @@
+<?php
+
+	session_start();
+	
+	if(!isset($_SESSION['logged_in'])) {
+		
+		header('Location: login.php');
+		exit();
+	}
+	
+		$userId=$_SESSION['id'];
+		
+	if(isset($_POST['expenseValue'])) {
+	
+		$all_good=true;
+		$expenseValue=$_POST['expenseValue'];
+		
+		if(($expenseValue)<=0) {
+			$all_good=false;
+			$_SESSION['e_value']='<div class="mt-2" style="color:red; font-size: 0.88rem">The value must be greater than 0.</div>';
+		}
+		
+		$_SESSION['r_eValue']=$expenseValue;
+		
+		if(isset($_POST['expenseCategory'])) {
+			
+			$expenseCategoryString=$_POST['expenseCategory'];
+			$expenseCategoryArray=explode(", ", $expenseCategoryString);
+
+			$expenseCategory=$expenseCategoryArray[0];
+
+			$_SESSION['r_eCategory']=$expenseCategory;
+			$_SESSION['r_eCategoryName']=$expenseCategoryArray[1];
+			
+		} else {
+			$all_good=false;
+			$_SESSION['e_category']='<div class="mt-2" style="color:red; font-size: 0.88rem">A category must be set.</div>';
+		}
+		
+		if(isset($_POST['paymentMethod'])) {
+			
+			$paymentMethodString=$_POST['paymentMethod'];
+			$paymentMethodArray=explode(", ", $paymentMethodString);
+
+			$paymentMethod=$paymentMethodArray[0];
+
+			$_SESSION['r_eMethod']=$paymentMethod;
+			$_SESSION['r_eMethodName']=$paymentMethodArray[1];
+			
+		} else {
+			$all_good=false;
+			$_SESSION['e_method']='<div class="mt-2" style="color:red; font-size: 0.88rem">You need to set your payment method.</div>';
+		}
+		
+		if(!empty($_POST['expenseDate'])) {
+			$expenseDate=$_POST['expenseDate'];
+			$currentTime=new DateTime();
+			
+			if (new DateTime($expenseDate)>$currentTime) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be later than today.</div>';
+			}
+			
+			if (new DateTime($expenseDate)<new DateTime('2000-01-01')) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be earlier than 01.01.2000.</div>';
+			}
+			
+			$_SESSION['r_eDate']=$expenseDate;
+
+		} else {
+			$all_good=false;
+			$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">A date must be set.</div>';
+		}
+		
+		$expenseComment="";
+
+		if(!empty($_POST['expenseComment'])) {
+			$expenseComment=$_POST['expenseComment'];
+			$_SESSION['r_eComment']=$expenseComment;
+		}
+		
+	
+		if ($all_good==true) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result=$connection->query("INSERT INTO expenses VALUES (NULL, '$userId', '$expenseCategory', '$paymentMethod', '$expenseValue', '$expenseDate', '$expenseComment')");
+					if(!$result) throw new Exception($connection->error);
+					
+					$_SESSION['addSuccess']=true;
+					header('Location: add-success.php');
+					
+					$connection->close();
+				}
+				
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure.<br/>Please try another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +117,7 @@
     <title>Main menu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css"/>
 </head>
 
 <body class="menu">
@@ -23,7 +133,7 @@
                 <ul class="nav nav-tabs">
                     
                     <li class="nav-item">
-                        <a class="nav-link" id="start-tab" href="./menu.html">
+                        <a class="nav-link" id="start-tab" href="./menu.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
@@ -33,7 +143,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.html">
+                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -56,7 +166,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.html">
+                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
@@ -66,7 +176,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="settings-tab" href="./settings-tab.html">
+                        <a class="nav-link" id="settings-tab" href="./settings-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
@@ -77,7 +187,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="log-out-tab" href="./login.html">
+                        <a class="nav-link" id="log-out-tab" href="./logout.php">
                         
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -96,86 +206,116 @@
 
             <h1>Add expense</h1>
             <div class="container mt-5">
-                <form id="expenseForm">
+                <form method="post" id="expenseForm">
                     <div class="mb-3">
-                        <label for="amountInput" class="form-label">Enter amount [zł]</label>
+                        <label class="form-label">Enter amount [zł]</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" id="amountInput" placeholder="Amount" step="0.01" required>
+                            <input type="number" class="form-control" placeholder="Amount" step="0.01" value="<?php 
+								if(isset($_SESSION['r_eValue'])) {
+									echo $_SESSION['r_eValue'];
+									unset($_SESSION['r_eValue']);
+								}
+							?>" name="expenseValue">
                         </div>
+						<?php
+							if (isset($_SESSION['e_value'])){
+								echo $_SESSION['e_value'];
+								unset($_SESSION['e_value']);
+							}
+						?>
+                    </div>
+				
+                    <div class="mb-3">
+                        <label class="form-label">Select Date</label>
+                        <input type="date" class="form-control" value="<?php 
+							if(isset($_SESSION['r_eDate'])) {
+								echo $_SESSION['r_eDate'];
+								unset($_SESSION['r_eDate']);
+							}
+						?>" name="expenseDate">
+						<?php
+							if (isset($_SESSION['e_date'])){
+								echo $_SESSION['e_date'];
+								unset($_SESSION['e_date']);
+							}
+						?>
                     </div>
 
                     <div class="mb-3">
-                        <label for="dateInputExpense" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="dateInputExpense" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="categorySelect" class="form-label">Select category</label>
-                        <select id="categorySelect" class="form-select" aria-label="Select category" required>
-                            <option value="" selected disabled>Select category</option>
-                            <option value="Food">Food</option>
-                            <option value="Rent">Rent</option>
-                            <option value="Transport">Transport</option>
-                            <option value="Telecommunication">Telecommunication</option>
-                            <option value="Health">Health</option>
-                            <option value="Clothes">Clothes</option>
-                            <option value="Hygiene">Hygiene</option>
-                            <option value="Kids">Kids</option>
-                            <option value="Entertainment">Entertainment</option>
-                            <option value="Trip">Trip</option>
-                            <option value="Training">Training</option>
-                            <option value="Books">Books</option>
-                            <option value="Savings">Savings</option>
-                            <option value="For retirement">For retirement</option>
-                            <option value="Debts">Debts</option>
-                            <option value="Donation">Donation</option>
-                            <option value="custom">Other - category in comment</option>
-                        </select>                       
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="paymentMethodExpense" class="form-label">Payment method</label>
-                        <select id="paymentMethodDropdown" class="form-select" aria-label="Payment method" required>
-                            <option value="" selected disabled>Payment method</option>
-                            <option value="Food">Cash</option>
-                            <option value="Rent">Card</option>
+                        <label class="form-label">Select category</label>
+                        <select class="form-select" name="expenseCategory">
+							<?php
+								if(isset($expenseCategoryArray)) {
+									echo '<option value="'.$_SESSION['r_eCategory'].', '.$_SESSION['r_eCategoryName'].'">'.$_SESSION['r_eCategoryName'].'</option>';
+									unset($expenseCategoryArray);
+									foreach ($_SESSION['user_expenses_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								} else {
+									echo '<option value="" selected disabled>Select category</option>';
+									foreach ($_SESSION['user_expenses_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								}
+							?>
                         </select>
+						<?php
+							if (isset($_SESSION['e_category'])){
+								echo $_SESSION['e_category'];
+								unset($_SESSION['e_category']);
+							}
+						?>				
+                    </div>
+					
+					<div class="mb-3">
+                        <label class="form-label">Payment method</label>
+                        <select class="form-select" name="paymentMethod">
+							<?php
+								if(isset($paymentMethodArray)) {
+									echo '<option value="'.$_SESSION['r_eMethod'].', '.$_SESSION['r_eMethodName'].'">'.$_SESSION['r_eMethodName'].'</option>';
+									unset($paymentMethodArray);
+									foreach ($_SESSION['user_payment_methods'] as $method) {
+										echo '<option value="'.$method['id'].', '.$method['name'].'">'.$method['name'].'</option>';
+									}
+								} else {
+									echo '<option value="" selected disabled>Select method</option>';
+									foreach ($_SESSION['user_payment_methods'] as $method) {
+										echo '<option value="'.$method['id'].', '.$method['name'].'">'.$method['name'].'</option>';
+									}
+								}
+							?>
+                        </select>
+						<?php
+							if (isset($_SESSION['e_method'])){
+								echo $_SESSION['e_method'];
+								unset($_SESSION['e_method']);
+							}
+						?>				
                     </div>
 
                     <div class="mb-3">
-                        <label for="inputMessageExpense" class="form-label">Comment</label>
-                        <textarea class="form-control" id="inputMessageExpense" rows="1"
-                        placeholder="Enter your message"></textarea>
+                        <label class="form-label">Comment</label>
+                        <input type="text" class="form-control"
+                        placeholder="Enter your message or another category" value="<?php 
+							if(isset($_SESSION['r_eComment'])) {
+								echo $_SESSION['r_eComment'];
+								unset($_SESSION['r_eComment']);
+							}
+						?>" name="expenseComment">
                     </div>
 
                     <div class="d-flex justify-content-center" style="margin-top: 50px">
                         <button type="submit" class="btn btn-primary add">Add</button>
-                        <a href="./menu.html" class="btn btn-secondary cancel">Cancel</a>
+                        <a href="./menu.php" class="btn btn-secondary cancel">Cancel</a>
                     </div>
                 </form>
-
-                <div id="successMessage">
-                    <p>Your expense has been successfully added! Select the tab you want to go.</p>
-                    <a href="./add-income-tab.html" class="btn btn-primary add">Add another expense</a>
-                </div>
-
             </div>
-
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-    <script>
-        document.getElementById('expenseForm').addEventListener('submit', function(event) {
-
-            event.preventDefault();
-            document.querySelector('#expenseForm').style.display = 'none';
-            document.getElementById('successMessage').style.display = 'block';
-        });
-    </script>
 
 </body>
 </html>

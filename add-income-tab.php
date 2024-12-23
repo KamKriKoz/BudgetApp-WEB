@@ -1,16 +1,111 @@
+<?php
+
+	session_start();
+	
+	if(!isset($_SESSION['logged_in'])) {
+		
+		header('Location: login.php');
+		exit();
+	}
+	
+	$userId=$_SESSION['id'];
+		
+	if(isset($_POST['incomeValue'])) {
+	
+		$all_good=true;
+		$incomeValue=$_POST['incomeValue'];
+		
+		if(($incomeValue)<=0) {
+			$all_good=false;
+			$_SESSION['e_value']='<div class="mt-2" style="color:red; font-size: 0.88rem">The value must be greater than 0.</div>';
+		}
+		
+		$_SESSION['r_iValue']=$incomeValue;
+		
+		if(isset($_POST['incomeCategory'])) {
+			
+			$incomeCategoryString=$_POST['incomeCategory'];
+			$incomeCategoryArray=explode(", ", $incomeCategoryString);
+
+			$incomeCategory=$incomeCategoryArray[0];
+
+			$_SESSION['r_iCategory']=$incomeCategory;
+			$_SESSION['r_iCategoryName']=$incomeCategoryArray[1];
+			
+		} else {
+			$all_good=false;
+			$_SESSION['e_category']='<div class="mt-2" style="color:red; font-size: 0.88rem">A category must be set.</div>';
+		}
+		
+		if(!empty($_POST['incomeDate'])) {
+			$incomeDate=$_POST['incomeDate'];
+			$currentTime=new DateTime();
+			
+			if (new DateTime($incomeDate)>$currentTime) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be later than today.</div>';
+			}
+			
+			if (new DateTime($incomeDate)<new DateTime('2000-01-01')) {
+				$all_good=false;
+				$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">The date cannot be earlier than 01.01.2000.</div>';
+			}
+			
+			$_SESSION['r_iDate']=$incomeDate;
+
+		} else {
+			$all_good=false;
+			$_SESSION['e_date']='<div class="mt-2" style="color:red; font-size: 0.88rem">A date must be set.</div>';
+		}
+		
+		$incomeComment="";
+
+		if(!empty($_POST['incomeComment'])) {
+			$incomeComment=$_POST['incomeComment'];
+			$_SESSION['r_iComment']=$incomeComment;
+		}
+		
+		
+		if ($all_good==true) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result=$connection->query("INSERT INTO incomes VALUES (NULL, '$userId', '$incomeCategory', '$incomeValue', '$incomeDate', '$incomeComment')");
+					if(!$result) throw new Exception($connection->error);
+					
+					$_SESSION['addSuccess']=true;
+					header('Location: add-success.php');
+					
+					$connection->close();
+				}
+				
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure.<br/>Please try another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}	
+	}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Main menu</title>
+    <title>Add income tab</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="style.css"/>
 </head>
 
-<body class="menu">
+<body class="add-income">
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
             
@@ -23,7 +118,7 @@
                 <ul class="nav nav-tabs">
                     
                     <li class="nav-item">
-                        <a class="nav-link active">
+                        <a class="nav-link" id="start-tab" href="./menu.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
@@ -33,7 +128,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="incomes-tab" href="./add-income-tab.html">
+                        <a class="nav-link active" id="incomes-tab">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8m5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0"/>
@@ -46,7 +141,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.html">
+                        <a class="nav-link" id="expenses-tab" href="./add-expense-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart4" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l.5 2H5V5zM6 5v2h2V5zm3 0v2h2V5zm3 0v2h1.36l.5-2zm1.11 3H12v2h.61zM11 8H9v2h2zM8 8H6v2h2zM5 8H3.89l.5 2H5zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
@@ -56,7 +151,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.html">
+                        <a class="nav-link" id="balance-tab" href="./view-balance-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
@@ -66,7 +161,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="settings-tab" href="./settings-tab.html">
+                        <a class="nav-link" id="settings-tab" href="./settings-tab.php">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
@@ -77,7 +172,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" id="log-out-tab" href="./login.html">
+                        <a class="nav-link" id="log-out-tab" href="./logout.php">
                         
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="margin-right: 5px; margin-left: -5px;">
                                 <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
@@ -91,16 +186,96 @@
         </div>
     </nav>
     
-    <div class="tab-content container mt-5">
+    <div class="tab-content container mt-5 mb-5">
         <div class="tab-pane active">
-            <h1>Hi ...</h1>
-            <p>What do you want to do next?</p>
-            <img id="menu-img" src="./images/thinking-image.jpg" style="display: block; margin: 0 auto;">
+
+            <h1>Add income</h1>
+            <div class="container mt-3">
+                <form method="post" id="incomeForm">	
+				
+                    <div class="mb-3">
+                        <label class="form-label">Enter amount [zł]</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="Amount" step="0.01" value="<?php 
+								if(isset($_SESSION['r_iValue'])) {
+									echo $_SESSION['r_iValue'];
+									unset($_SESSION['r_iValue']);
+								}
+							?>" name="incomeValue">
+                        </div>
+							<?php
+								if (isset($_SESSION['e_value'])){
+									echo $_SESSION['e_value'];
+									unset($_SESSION['e_value']);
+								}
+							?>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Date</label>
+                        <input type="date" class="form-control" value="<?php 
+							if(isset($_SESSION['r_iDate'])) {
+								echo $_SESSION['r_iDate'];
+								unset($_SESSION['r_iDate']);
+							}
+						?>" name="incomeDate">
+						<?php
+							if (isset($_SESSION['e_date'])){
+								echo $_SESSION['e_date'];
+								unset($_SESSION['e_date']);
+							}
+						?>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select category</label>
+                        <select class="form-select" name="incomeCategory">
+							<?php
+								if(isset($incomeCategoryArray)) {
+									echo '<option value="'.$_SESSION['r_iCategory'].', '.$_SESSION['r_iCategoryName'].'">'.$_SESSION['r_iCategoryName'].'</option>';
+									unset($incomeCategoryArray);
+									foreach ($_SESSION['user_incomes_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								} else {
+									echo '<option value="" selected disabled>Select category</option>';
+									foreach ($_SESSION['user_incomes_categories'] as $category) {
+										echo '<option value="'.$category['id'].', '.$category['name'].'">'.$category['name'].'</option>';
+									}
+								}
+							?>
+                        </select>
+						<?php
+							if (isset($_SESSION['e_category'])){
+								echo $_SESSION['e_category'];
+								unset($_SESSION['e_category']);
+							}
+						?>				
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Comment</label>
+                        <input type="text" class="form-control"
+                        placeholder="Enter your message or another category" value="<?php 
+							if(isset($_SESSION['r_iComment'])) {
+								echo $_SESSION['r_iComment'];
+								unset($_SESSION['r_iComment']);
+							}
+						?>" name="incomeComment">
+                    </div>
+
+                    <div class="d-flex justify-content-center" style="margin-top: 50px">
+                        <button type="submit" class="btn btn-primary add">Add</button>
+                        <a href="./menu.php" class="btn btn-secondary cancel">Cancel</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+		
 </body>
 </html>

@@ -1,3 +1,11 @@
+<?php
+
+	session_start();
+	
+	unset($_SESSION['error']);
+	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,13 +24,13 @@
             <div class="container">
                 <div class="card" style="width: 20rem; margin: 30px; border: none">
                 <img src="./images/register-image.jpg" class="card-img-top">
-                    <a href="./register.html" class="btn btn-primary">Register</a>
+                    <a href="./register.php" class="btn btn-primary">Register</a>
                 </div>
             </div>
             <div class="container">
                 <div class="card" style="width: 20rem; margin: 30px; border: none">
                 <img src="./images/login-image.jpg" class="card-img-top">
-                    <a href="./login.html" class="btn btn-primary">Login</a>
+                    <a href="./login.php" class="btn btn-primary">Login</a>
                 </div>
             </div>
         </div>
