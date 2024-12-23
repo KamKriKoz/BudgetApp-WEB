@@ -7,9 +7,6 @@
 		header('Location:login.php');
 		exit();
 	}
-	
-	
-	
 ?>
 
 <!DOCTYPE html>
@@ -117,11 +114,8 @@
                 <div class="mb-3">
 					<form method="post" style="display: flex; justify-content: center; flex-wrap: wrap">
 						<label style="color: gold; font-size:1.2rem; margin-right: 12px">Select date range:</label>
-						
 						<input type="date" style="width: 6.5rem; border-radius: 0.5rem; padding-left: 4px" name="startDate">
-        
 						<input type="date" style="width: 6.5rem; border-radius: 0.5rem; padding-left: 4px" name="endDate">
-						
 						<button style="width: 58%; border-radius:1rem" type="submit" class="btn btn-primary add mt-3">Confirm / Reset</button>
 					</form>
                 </div>
@@ -165,10 +159,11 @@
 									";				
 							$user_incomes=[];
 							$result1=$connection->query($query1);
-							
+							if(!$result1) throw new Exception($connection->error);
 							while($row1=$result1->fetch_assoc()) {
 								$user_incomes[]=$row1;
 							}
+							$result1->free();
 							
 							$query2="SELECT expense.name AS expense_category_name,
 											payment.name AS payment_method,
@@ -181,10 +176,11 @@
 									";				
 							$user_expenses=[];
 							$result2=$connection->query($query2);
-							
+							if(!$result2) throw new Exception($connection->error);
 							while($row2=$result2->fetch_assoc()) {
 								$user_expenses[]=$row2;
 							}
+							$result2->free();
 							
 							$query3="
 								SELECT incomes_category_assigned_to_users.name AS category,
@@ -197,10 +193,11 @@
 							";				
 							$user_incomes_by_category=[];
 							$result3=$connection->query($query3);
-							
+							if(!$result3) throw new Exception($connection->error);
 							while($row3=$result3->fetch_assoc()) {
 								$user_incomes_by_category[]=$row3;
 							}
+							$result3->free();
 							
 							$query4="
 								SELECT expenses_category_assigned_to_users.name AS category,
@@ -213,49 +210,40 @@
 							";				
 							$user_expenses_by_category=[];
 							$result4=$connection->query($query4);
-							
+							if(!$result4) throw new Exception($connection->error);
 							while($row4=$result4->fetch_assoc()) {
 								$user_expenses_by_category[]=$row4;
 							}
-						
+							$result4->free();
+							
 							$query5="SELECT SUM(amount) AS incomesSum FROM incomes WHERE user_id='$userId'";
 							$result5=$connection->query($query5);
+							if(!$result5) throw new Exception($connection->error);
 							$row5=$result5->fetch_assoc();
 							$incomesSum=$row5['incomesSum'];
+							$result5->free();
 
 							$query6="SELECT SUM(amount) AS expensesSum FROM expenses WHERE user_id='$userId'";
 							$result6=$connection->query($query6);
+							if(!$result6) throw new Exception($connection->error);
 							$row6=$result6->fetch_assoc();
 							$expensesSum=$row6['expensesSum'];
-
+							$result6->free();
+							
 							$balance=$incomesSum-$expensesSum;
 							
 							$query7="SELECT SUM(amount) AS periodIncomesSum FROM incomes WHERE user_id='$userId' AND date_of_income BETWEEN '$startDate' AND '$endDate'";
 							$result7=$connection->query($query7);
+							if(!$result7) throw new Exception($connection->error);
 							$row7=$result7->fetch_assoc();
 							$periodIncomesSum=$row7['periodIncomesSum'];
+							$result7->free();
 
 							$query8="SELECT SUM(amount) AS periodExpensesSum FROM expenses WHERE user_id='$userId' AND date_of_expense BETWEEN '$startDate' AND '$endDate'";
 							$result8=$connection->query($query8);
+							if(!$result8) throw new Exception($connection->error);
 							$row8=$result8->fetch_assoc();
 							$periodExpensesSum=$row8['periodExpensesSum'];
-
-							if(!$result1) throw new Exception($connection->error);
-							if(!$result2) throw new Exception($connection->error);
-							if(!$result3) throw new Exception($connection->error);
-							if(!$result4) throw new Exception($connection->error);
-							if(!$result5) throw new Exception($connection->error);
-							if(!$result6) throw new Exception($connection->error);
-							if(!$result7) throw new Exception($connection->error);
-							if(!$result8) throw new Exception($connection->error);
-							
-							$result1->free();
-							$result2->free();
-							$result3->free();
-							$result4->free();
-							$result5->free();
-							$result6->free();
-							$result7->free();
 							$result8->free();
 
 							$connection->close();

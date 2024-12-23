@@ -8,6 +8,169 @@
 		exit();
 	}
 	
+	$userId=$_SESSION['id'];
+	
+	$form1Submitted=false;
+	$form2Submitted=false;
+	$form3Submitted=false;
+	
+		
+	if(isset($_POST['newName'])) {
+		
+		$goodName=true;
+		
+		$newName=$_POST['newName'];
+
+		if ((strlen($newName)<3) || (strlen($newName)>20)) {
+			$goodName=false;
+			$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Username must be between 3 and 20 characters long.</span>';
+		}
+		
+		if (ctype_alnum($newName)==false) {
+			$goodName=false;
+			$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Only Latin alphabet letters and numbers are allowed.</span>';
+		}
+		
+		if(empty($_POST['newName'])) {
+			$goodName=false;
+			$_SESSION['e_username']='<span style="color:red; margin-top:; font-size: 0.78rem">Username cannot be empty.</span>';
+		}
+		
+		if($goodName) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result1=$connection->query("SELECT id FROM users WHERE username='$newName'");
+					if(!$result1) throw new Exception($connection->error);
+					$howManyUsernames=$result1->num_rows;
+					if($howManyUsernames>0) {
+						$goodName=false;
+						$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">This username is already taken. Enter another one.</span>';
+					}
+					
+					if($goodName) {
+						$result2=$connection->query("UPDATE users SET username='$newName' WHERE id='$userId'");
+						if(!$result2) throw new Exception($connection->error);
+						$_SESSION['user']=$newName;
+						$form1Submitted=true;
+						$_SESSION['s_username']='<label style="font-size: 1.2rem" class="form-label">Username has been successfully changed.</label>';
+					}
+					$connection->close();
+				}
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure. <br/> Please register another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}
+	}
+	
+	
+	if(isset($_POST['newEmail'])) {
+		
+		$goodEmail=true;
+		$newEmail=$_POST['newEmail'];
+		$newEmail_S=filter_var($newEmail, FILTER_SANITIZE_EMAIL);
+		
+		if ((filter_var($newEmail_S, FILTER_VALIDATE_EMAIL)==false) || ($newEmail_S!=$newEmail)){
+			$goodEmail=false;
+			$_SESSION['e_email']='<span class="mb-3" style="color: red; font-size: 0.78rem; margin-top: -0.5rem">Email address is invalid.</span>';
+		}
+		
+		if(empty($_POST['newEmail'])) {
+			$goodEmail=false;
+			$_SESSION['e_email']='<span style="color:red; margin-top:; font-size: 0.78rem">Email cannot be empty.</span>';
+		}
+		
+		if($goodEmail) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result1=$connection->query("SELECT id FROM users WHERE email='$newEmail'");
+					if(!$result1) throw new Exception($connection->error);
+					$howManyEmails=$result1->num_rows;
+					if($howManyEmails>0) {
+						$goodEmail=false;
+						$_SESSION['e_username']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">This email is already taken. Enter another one.</span>';
+					}
+					
+					if($goodEmail) {
+						$result2=$connection->query("UPDATE users SET email='$newEmail' WHERE id='$userId'");
+						if(!$result2) throw new Exception($connection->error);
+						$form2Submitted=true;
+						$_SESSION['s_email']='<label style="font-size: 1.2rem" class="form-label">Email has been successfully changed.</label>';
+					}
+					$connection->close();
+				}
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure. <br/> Please register another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}
+	}
+	
+	
+	if(isset($_POST['newPassword'])) {
+		
+		$goodPassword=true;
+		$oldPassword=$_POST['oldPassword'];
+		$newPassword=$_POST['newPassword'];
+		$newPasswordRep=$_POST['newPasswordRep'];
+		$newPassHash=password_hash($newPassword, PASSWORD_DEFAULT);
+					
+		if ((strlen($newPassword)<8) || (strlen($newPassword)>20)) {
+			$goodPassword=false;
+			$_SESSION['e_password']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Password must be between 8 and 20 characters long.</span>';
+		}
+		
+		if($newPassword!=$newPasswordRep) {
+			$goodPassword=false;
+			$_SESSION['e_password']='<span class="mb-3" style="color: red; font-size: 0.78rem; margin-top: -0.5rem">Passwords must be same.</span>';
+		}		
+
+		if($goodPassword) {
+		
+			require_once "connect.php";
+			mysqli_report(MYSQLI_REPORT_STRICT);
+			
+			try {
+				$connection=new mysqli($host, $db_user, $db_password, $db_name);
+				if($connection->connect_errno!=0){
+					throw new Exception(mysqli_connect_errno());
+				} else {
+					$result1=$connection->query("SELECT password FROM users WHERE id='$userId'");
+					if(!$result1) throw new Exception($connection->error);
+					$row1=$result1->fetch_assoc();
+					$pass=$row1['password'];
+					
+					if(password_verify($oldPassword, $pass)) {
+						$result2=$connection->query("UPDATE users SET password='$newPassHash' WHERE id='$userId'");
+						if(!$result2) throw new Exception($connection->error);
+						$form3Submitted=true;
+						$_SESSION['s_password']='<label style="font-size: 1.2rem" class="form-label">Password has been successfully changed.</label>';
+					} else {
+						$_SESSION['e_password']='<span style="color:red; margin-top: 0.5rem; font-size: 0.78rem">Old password is incorrect. Try again.</span>';
+					}
+					
+					$connection->close();
+				}
+			} catch(Exception $e) {
+				echo '<span class="mb-3" style="color: red; font-size: 1.5rem; text-align: center">Server failure. <br/> Please register another time.</span>';
+				//echo '<br/><span class="mb-3" style="color: gold; text-align: center">Develope info: '.$e.'</span>';
+			}
+		}
+	}
 ?>
 
 <!DOCTYPE html>
@@ -105,76 +268,95 @@
     
     <div class="tab-content container mt-5">
         <div class="tab-pane active">
+		
+          <form method="post">
+			<?php if($form1Submitted) :?>
+				<div>
+					<?php
+						if (isset($_SESSION['s_username'])){
+							echo $_SESSION['s_username'];
+							unset($_SESSION['s_username']);
+						}
+					?>
+				</div>
+			<?php else: ?>
+				<label class="form-label">Change your name</label>
+				<div class="inputChange">
+					<input type="text" class="form-control mb-1 text-left" placeholder="Enter new name" name="newName"/>
+					<button type="submit" class="btn btn-secondary mb-1 submitButt">Confirm</button>
+				</div>
+			<?php endif; ?>
 
-          <form class="inputForm" id="newName">
-            <label for="newName" class="form-label">Change your name</label>
-            <div class="inputChange mb-3">
-              <input type="text" id="text-input-name" class="form-control mb-3 text-left" placeholder="Enter your new name" required/>
-              <button type="submit" id="confirm-button-name" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
-            </div>
+			<?php
+				if (isset($_SESSION['e_username'])){
+					echo $_SESSION['e_username'];
+					unset($_SESSION['e_username']);
+				}
+			?>
           </form>
+		  
+		  <form class="mt-3" method="post">
+			<?php if($form2Submitted) :?>
+				<div>
+					<?php
+						if (isset($_SESSION['s_email'])){
+							echo $_SESSION['s_email'];
+							unset($_SESSION['s_email']);
+						}
+					?>
+				</div>
+			<?php else: ?>
+				<label class="form-label">Change your email</label>
+				<div class="inputChange">
+					<input type="text" class="form-control mb-1 text-left" placeholder="Enter new email" name="newEmail"/>
+					<button type="submit" class="btn btn-secondary mb-1 submitButt">Confirm</button>
+				</div>
+			<?php endif; ?>
 
-          <div id="successMessageName">
-            <p>Your name has been successfully changed.</p>
-          </div>
-
-          <form class="inputForm" id="newEmail">
-            <label for="newEmail" class="form-label">Change your email</label>
-            <div class="inputChange mb-3">
-              <input type="email" id="text-input-email" class="form-control mb-3 text-left" placeholder="Enter your new email" required/>
-              <button type="submit" id="confirm-button-email" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
-            </div>
+			<?php
+				if (isset($_SESSION['e_email'])){
+					echo $_SESSION['e_email'];
+					unset($_SESSION['e_email']);
+				}
+			?>
           </form>
+		  
+		  <form class="mt-3" method="post">
+			<?php if($form3Submitted) :?>
+				<div>
+					<?php
+						if (isset($_SESSION['s_password'])){
+							echo $_SESSION['s_password'];
+							unset($_SESSION['s_password']);
+						}
+					?>
+				</div>
+			<?php else: ?>
+				<label class="form-label">Change your password</label>
+				<div class="inputChange">
+					<div class="inputPassword">
+						<input type="password" class="form-control mb-1 text-left" placeholder="Enter old password" name="oldPassword"/>
+						<input type="password" class="form-control mb-1 text-left" placeholder="Enter new password" name="newPassword"/>
+						<input type="password" class="form-control mb-1 text-left" placeholder="Repeat new password" name="newPasswordRep"/>
+					</div>
+					<button type="submit" class="btn btn-secondary mb-1 submitButt">Confirm</button>
+				</div>
+			<?php endif; ?>
 
-          <div id="successMessageEmail">
-            <p>Your email has been successfully changed.</p>
-          </div>
-          
-          <form class="inputForm" id="newPassword">
-            <label for="newPassword" class="form-label">Change your password</label>
-            <div class="inputChange mb-3">
-              <div class="inputPassword">
-                <input type="password" id="text-input-password-old" class="form-control mb-3 text-left" placeholder="Enter your old password" required/>
-                <input type="password" id="text-input-password-new" class="form-control mb-3 text-left" placeholder="Enter your new password" required/>
-                <input type="password" id="text-input-password-repeat" class="form-control mb-3 text-left" placeholder="Repeat new password" required/>
-              </div>
-              <button type="submit" id="confirm-button-password" class="btn btn-secondary mb-3 submitButt"> Confirm </button>
-            </div>
+			<?php
+				if (isset($_SESSION['e_password'])){
+					echo $_SESSION['e_password'];
+					unset($_SESSION['e_password']);
+				}
+			?>
           </form>
-
-          <div id="successMessagePassword">
-            <p>Your password has been successfully changed.</p>
-          </div>
-
+		  
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
-        <script>
-          document.getElementById('newName').addEventListener('submit', function(event) {
-  
-              event.preventDefault();
-              document.querySelector('#newName').style.display = 'none';
-              document.getElementById('successMessageName').style.display = 'block';
-          });
-
-          document.getElementById('newEmail').addEventListener('submit', function(event) {
-
-              event.preventDefault();
-              document.querySelector('#newEmail').style.display = 'none';
-              document.getElementById('successMessageEmail').style.display = 'block';
-          });
-
-          document.getElementById('newPassword').addEventListener('submit', function(event) {
-
-              event.preventDefault();
-              document.querySelector('#newPassword').style.display = 'none';
-              document.getElementById('successMessagePassword').style.display = 'block';
-          });
-        </script>
 
 </body>
 </html>
